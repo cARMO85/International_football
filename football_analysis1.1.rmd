@@ -1,0 +1,377 @@
+---
+title: "That's a dive: International Football exploration 2022"
+output: github_document
+---
+
+```{r} 
+# Install required packages
+install.packages("tidyverse")
+install.packages("lubridate")
+install.packages("viridis")
+install.packages("usethis")
+install.packages("git2r")
+
+```
+```{r} 
+# Load required packages
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+library(viridis)
+```
+    
+# Introduction
+My ambition was to explore football data as I am passionate about football and the World Cup really excited me to try something fun. In this analysis, I will be working with three data sets: shootouts, goalscorers, and results.
+
+## Data Preparation
+First, I will specify the URLs of the CSV files and use the read_csv() function from the readr package to read in the CSV files from the URLs:
+
+```{r} 
+# Specify the URLs of the CSV files
+shootouts_url <- "https://raw.githubusercontent.com/martj42/international_results/master/shootouts.csv"
+goalscorers_url <- "https://raw.githubusercontent.com/martj42/international_results/master/goalscorers.csv"
+results_url <- "https://raw.githubusercontent.com/martj42/international_results/master/results.csv"
+
+# Use the read_csv() function from the readr package to read in the CSV files from the URLs
+shootouts <- readr::read_csv(shootouts_url)
+goalscorers <- readr::read_csv(goalscorers_url),
+results <- readr::read_csv(results_url)
+
+# Print the first few rows of each data frame to check that they were read in correctly
+head(shootouts, n = 3)
+head(goalscorers, n = 3)
+head(results, n = 3)
+```
+
+# Analysis
+Next, I will perform some analysis on the data based on some questions that interest me.
+
+## Which country has been involved in the most shootouts?
+Count of shootouts by country
+```{r}
+# Count the number of shootouts by country
+shootouts_by_country <- shootouts %>%
+  group_by(winner) %>%
+  tally() %>%
+  arrange(desc(n))
+print(shootouts_by_country)
+```
+## Which team has won the most penalty shootouts?
+### Count of total penalties by year
+Crazy! I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
+
+```{r}
+# Filter the data to include only penalty goals
+penalty_goals <- goalscorers %>%
+  filter(penalty == TRUE)
+
+# Extract the year from the date column
+penalty_goals <- penalty_goals %>%
+  mutate(year = year(date))
+
+# Group the data by year and count the number of penalty goals
+penalty_goals_by_year <- penalty_goals %>%
+  group_by(year) %>%
+  summarize(count = n())
+
+# Plot the number of penalty goals scored in each year
+ggplot(penalty_goals_by_year, aes(x = year, y = count)) +
+  geom_bar(stat = "identity") +
+  geom_smooth(method = "lm", se = FALSE) +
+  ylim(0, NA)
+```
+
+## What happened in 2021?
+Woah that's a lot of penaltiesin 2021. I will definetely be doing some further research about this outlier. I zoomed in a bit to that chart to see the scale of the outlier.
+```{r}
+# Extract the year from the date column and create a new column called year
+goalscorers$year <- year(ymd(goalscorers$date))
+
+# Filter the data to include only penalty goals
+penalty_goals <- goalscorers %>% filter(penalty == TRUE)
+
+# Filter the data to include only rows from the last 32 years
+current_year <- year(Sys.Date())
+penalty_goals_32 <- penalty_goals %>%
+  filter(year >= current_year - 32)
+
+# Group the data by year and count the number of penalty goals
+penalty_goals_by_year <- penalty_goals_32 %>%
+  group_by(year) %>%
+  summarize(count = n())
+
+# Create a bar chart of penalty goals scored by year
+ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
+  geom_bar(stat = "identity")
+```
+
+## Who has scored the most goals from penalties?
+This is really intersting. Messi scored 4 penalties during this tournament alone, whereas Ronaldo scored 1. Since we are not sure when they will retire, Messi may be about to capture one of the only records Ronaldo has over Messi.
+```{r}
+# Group the data by player and sum the number of goals scored
+penalty_goals <- penalty_goals %>%
+  group_by(scorer) %>%
+  summarise(goals = sum(penalty))
+
+# Arrange the data in descending order of goals scored
+penalty_goals <- penalty_goals %>%
+  arrange(desc(goals))
+
+# Select the top 10 rows
+top_10 <- penalty_goals %>%
+  head(10)
+
+print(top_10)
+
+print(penalty_goals)
+
+
+```
+
+## Who is top of the table?
+Which team have won the most. I know I cannot consider the quality of opposition but it sure is interesting. i was surprised that the inclusion of average points (total wins/total games) didn't make much difference. It appears there is a mixture of South American, European and Asian teams making up the top 10. Pretty similiar to the makeup of the top 10 now.
+# Create a new column called result that indicates whether the home team won, lost, or drew the match
+```{r}
+results <- results %>%
+  mutate(result = ifelse(home_score > away_score, "win",
+                         ifelse(home_score == away_score, "draw", "loss")))
+
+# Group the data by home_team and summarize the number of wins, losses, and draws
+team_records <- results %>%
+  group_by(home_team) %>%
+  summarize(wins = sum(result == "win"),
+            losses = sum(result == "loss"),
+            draws = sum(result == "draw"))
+
+# Calculate the total points for each team
+team_records <- team_records %>%
+  mutate(total_points = wins * 3 + draws * 1)
+
+# Calculate the average points per game for each team
+team_records <- team_records %>%
+  mutate(avg_points = total_points / (wins + losses + draws))
+
+# Arrange the data in descending order of total points
+team_records <- team_records %>%
+  arrange(desc(total_points))
+
+# Print the resulting data frame
+head(team_records , 20)
+```
+
+## Do bad teams score more own-goals?
+Here we checck the correlation between number of ogs scored their average place on the global league table. I am expecting that the higher up on the list you are, the less likely you are to score an og.
+```{r}
+# Count the number of own goals scored by each team
+own_goals <- goalscorers %>%
+  filter(own_goal == TRUE) %>%
+  group_by(home_team) %>%
+  summarize(count = n())
+
+# Join the own_goals data frame to the team_records data frame, based on the team name
+team_records_with_ogs <- inner_join(team_records, own_goals, by = "home_team")
+
+# Print the resulting data frame
+team_records_with_ogs
+```
+
+Let's plot it to see.
+```{r}
+# Create a scatterplot of the number of own goals scored against the total points, with a continuous color scale
+ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
+  geom_point(aes(color = count)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlim(0, NA) + ylim(0, NA) +
+  scale_color_gradient(low = "blue", high = "red", guide = FALSE)
+
+
+# Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
+cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
+```
+That shows a significant and positive relationship between the two varaibles (and a Person correlation of 0.7 for good measure). I am happy to confirm, the more rubbish you are at football, the more likely you are to score an OG.
+
+## Which country scored the most goals?
+
+We were all thinking it, right?
+```{r}
+# Count the number of goals scored by each country
+goals_by_country <- table(goalscorers$team)
+# Sort the goals_by_country object in descending order
+goals_by_country <- sort(goals_by_country, decreasing = TRUE)
+# Convert the goals_by_country object to a data frame
+goals_by_country <- as.data.frame(goals_by_country)
+# Rename the columns of the data frame
+colnames(goals_by_country) <- c("team", "goals_scored")
+# Create a bar chart of goals scored by country displaying the top 10 nations
+goals_by_country_top10 <- head(goals_by_country, 10)
+ggplot(data = goals_by_country_top10, aes(x = team, y = goals_scored)) +
+  geom_bar(stat = "identity") +
+  xlab("Country") + ylab("Goals Scored") +
+  ggtitle("Goals Scored by Country: Top 10") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 12, vjust = 0.5, face = "bold"),
+        axis.text.y = element_text(size = 12, face = "bold")) +
+  labs(x = "", y = "") +
+  scale_fill_viridis(name = "Country", option = "D", direction = -1)
+#Full list here
+print(goals_by_country)
+```
+
+## Who gets battered everywhere they go? (besides Sp*rs)
+```{r}
+  # Reorder the levels of the home_team variable based on the goals_conceded column
+goals_conceded_by_team$home_team <- reorder(goals_conceded_by_team$home_team, goals_conceded_by_team$goals_conceded)
+
+# Create a bar chart of goals conceded by team
+ggplot(data = goals_conceded_by_team, aes(x = home_team, y = goals_conceded, fill = home_team)) +
+  geom_bar(stat = "identity") +
+  xlab("Team") + ylab("Goals Conceded") +
+  ggtitle("Goals Conceded by Team (Top 20)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 18, vjust = 0.5, face = "bold")) +
+  labs(x = "", y = "")
+```
+
+It seems like Northern Europe has taken a pounding with goals conceded. At least they got to see lots of goals? That's good, right Finland? Here is some pretty colours to cheer you up!
+
+## Is there any pattern to find when goals are scored in a game?
+We have a lot of data and a lot of goals. It would be a shame to not dig a little deeper into this.
+```{r}
+ggplot(data = goalscorers, aes(x = minute)) +
+  geom_histogram(breaks = seq(0, 120, by = 3), fill = "steelblue") +
+  xlab("Minute") + ylab("Number of Goals") +
+  ggtitle("Goals Scored by Minute") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 18, vjust = 0.5, face = "bold")) +
+  labs(x = "", y = "") +
+  geom_vline(xintercept = 45, color = "red", size = 2)
+```
+
+There is a similiar pattern in both halves (seperated by red line) however there appears to be a greater volume of goals at the second half. The fall off at the end determines when goals go in during the rare occasion of extra-time.
+
+## Extra-time analysis
+Sometimes we get goals in extra- time. let's see if the halbves of extra--time follow the same pattern as a normal game seeing that legs and minds are tired.
+```{r}
+
+ggplot(data = goalscorers, aes(x = minute)) +
+  geom_histogram(breaks = seq(94, 130, by = 1), fill = "pink") +
+  xlab("Minute") + ylab("Number of Goals") +
+  ggtitle("Goals Scored by Minute") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 14, vjust = 0.5, face = "bold")) +
+  labs(x = "", y = "") +
+  geom_vline(xintercept = 105, color = "blue", size = 1.5)
+```
+Very intersting to see that the pattern is the same. A positive slope that begins again at the start of each half. However, extra-time seems to be a little less predicitive that the 90 minute equivalent.
+
+## Is there such thing as home-advantage?
+Do teams win more at home vs away. Is the home advantage a thing?
+```{r}
+# Gather totals for home wins and away wins
+home_wins <- results %>%
+  filter(home_score > away_score)
+home_wins <- home_wins %>%
+  mutate(location = "home")
+home_wins <- home_wins %>%
+  mutate(location = "home")
+away_wins <- results %>%
+  filter(home_score < away_score) %>%
+  mutate(location = "away")
+
+# Combine data frames
+all_wins <- bind_rows(home_wins, away_wins)
+ggplot(data = all_wins, aes(x = location)) +
+  geom_bar(aes(y = (..count..))) +
+  xlab("Location") + ylab("Number of Wins") +
+  ggtitle("Number of Wins by Location") +
+  theme(axis.text.x = element_text(size = 12, face = "bold"),
+        axis.text.y = element_text(size = 12, face = "bold")) +
+  labs(x = "", y = "")
+```
+
+So more teams win at home than away. But that still doesnt prove it. We need ot comapre their home form to their away form to make a better conclusion.
+```{r}
+home_victories <- results %>%
+  filter(home_score > away_score) %>%
+  mutate(home_stadium = if_else(neutral == FALSE, TRUE, FALSE))
+
+
+t.test(home_score ~ home_stadium, data = home_victories)
+
+# Create a new variable indicating whether the home team won (1) or lost (0)
+results$outcome <- ifelse(results$home_score > results$away_score, 1, 0)
+
+# Create a new variable indicating whether the game was played at home (1) or away (0)
+results$location <- ifelse(results$neutral == TRUE, "neutral", ifelse(results$home_team == results$country, "home", "away"))
+
+# Use the t.test function to perform a t-test to compare the mean number of wins for home and away games
+t.test(outcome ~ location, data = results, alternative = "two.sided")
+
+# Use the chisq.test function to perform a chi-squared test to determine whether there is a significant association between the location and the outcome of the game
+chisq.test(table(results$outcome, results$location))
+
+```
+Based on the results of the Welch Two Sample t-test, there is evidence to suggest that the mean number of wins for home games is significantly different from the mean number of wins for away games (t = 2.6078, df = 6908.9, p-value = 0.009132). The 95% confidence interval for the difference in means is [0.02090075, 0.14745417], indicating that we can be 95% confident that the true difference in means falls within this range.
+
+The chi-squared test also indicated that there is a significant association between the location of the game and the outcome (i.e. win, lose, or draw) (X-squared = 191.33, df = 2, p-value < 2.2e-16). This suggests that the location of the game may have an impact on the outcome. However, it's important to note that this analysis only looked at the number of wins and not the actual outcome of the game (i.e. huge win, tight win or draw).
+
+## Has home advantage gor better or worse or not over time?
+With the porofessioanlism of the sport increasing adn increasing, and with the commercial side of teh game becoming more valued than the fans, has home advantage taken a beating?
+
+```{r}
+
+
+# Create a new column indicating the decade in which each match was played
+results$decade <- floor(as.numeric(as.year(results$date)) / 10) * 10
+
+# Group the data by decade and location and count the number of wins for each group
+win_counts <- results %>%
+  group_by(decade, location) %>%
+  summarize(wins = sum(outcome == "win"))
+
+# Create a line chart showing the number of home wins and away wins for each decade
+ggplot(win_counts, aes(x = decade, y = wins, color = location)) +
+  geom_line() +
+  xlab("Decade") + ylab("Number of Wins") +
+  ggtitle("Number of Wins by Decade and Location") +
+  theme(axis.text.x = element_text(size = 12, face = "bold"),
+        axis.text.y = element_text(size = 12, face = "bold")) +
+  labs(x = "", y = "") +
+  scale_color_manual(name = "Location", values = c("#1f77b4", "#ff7f0e")) +
+  scale_x_continuous(breaks = seq(1870, 2010, 10), labels = seq(1870, 2010, 10))
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+
+
+```
