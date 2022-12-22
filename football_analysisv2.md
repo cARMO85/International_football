@@ -1009,7 +1009,7 @@ ggplot(data = countries_per_match, aes(x = date, y = countries)) +
   scale_color_manual(name = "Line Type", values = c("red" = "red", "smooth" = "black"))
 ```
 
-! [image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png){: .center}
 
 
 
