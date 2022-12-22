@@ -1,6 +1,7 @@
 ---
 title: "That's a dive: International Football exploration 2022"
 output: github_document
+knit: true
 ---
 
 ```{r} 
@@ -23,11 +24,10 @@ library(viridis)
 ```
     
 # Introduction
-My ambition was to explore football data as I am passionate about football and the World Cup really excited me to try something fun. In this analysis, I will be working with three data sets: shootouts, goalscorers, and results.
+This analysis aims to explore football data. The following three data sets are used: shootouts, goalscorers, and results.
 
 ## Data Preparation
-First, I will specify the URLs of the CSV files and use the read_csv() function from the readr package to read in the CSV files from the URLs:
-
+To begin, we will specify the URLs of the CSV files and use the read_csv() function from the readr package to read in the CSV files from the URLs:
 ```{r} 
 # Specify the URLs of the CSV files
 shootouts_url <- "https://raw.githubusercontent.com/martj42/international_results/master/shootouts.csv"
@@ -36,7 +36,7 @@ results_url <- "https://raw.githubusercontent.com/martj42/international_results/
 
 # Use the read_csv() function from the readr package to read in the CSV files from the URLs
 shootouts <- readr::read_csv(shootouts_url)
-goalscorers <- readr::read_csv(goalscorers_url),
+goalscorers <- readr::read_csv(goalscorers_url)
 results <- readr::read_csv(results_url)
 
 # Print the first few rows of each data frame to check that they were read in correctly
@@ -46,10 +46,10 @@ head(results, n = 3)
 ```
 
 # Analysis
-Next, I will perform some analysis on the data based on some questions that interest me.
+Next, we will perform some analysis on the data based on a few questions that interest us.
 
 ## Which country has been involved in the most shootouts?
-Count of shootouts by country
+We can count the number of shootouts by country using the following code:
 ```{r}
 # Count the number of shootouts by country
 shootouts_by_country <- shootouts %>%
@@ -58,15 +58,18 @@ shootouts_by_country <- shootouts %>%
   arrange(desc(n))
 print(shootouts_by_country)
 ```
-## Which team has won the most penalty shootouts?
-### Count of total penalties by year
 Crazy! I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
+## Which team has won the most penalty shootouts?
+First, we will filter the data to include only penalty goals:
 ```{r}
 # Filter the data to include only penalty goals
 penalty_goals <- goalscorers %>%
   filter(penalty == TRUE)
+```
 
+Next, we will extract the year from the date column and group the data by year, counting the number of penalty goals:
+```{r}
 # Extract the year from the date column
 penalty_goals <- penalty_goals %>%
   mutate(year = year(date))
@@ -75,16 +78,22 @@ penalty_goals <- penalty_goals %>%
 penalty_goals_by_year <- penalty_goals %>%
   group_by(year) %>%
   summarize(count = n())
+```
 
+Finally, we can plot the number of penalty goals scored in each year using the following code:
+```{r}
 # Plot the number of penalty goals scored in each year
 ggplot(penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity") +
   geom_smooth(method = "lm", se = FALSE) +
   ylim(0, NA)
 ```
+As we can see from the trend line included, the number of overall penalties has increased overtime. Tere also seems to a cyclical boom/bust cycle in recent years seeing high number of penalties followed by a year of low penalties. Are the football organisations as a whole responsding too aggressively each year to the huge turns in number of penalties.
 
 ## What happened in 2021?
+
 Woah that's a lot of penaltiesin 2021. I will definetely be doing some further research about this outlier. I zoomed in a bit to that chart to see the scale of the outlier.
+To investigate the large number of penalties in 2021, we can filter the `goalscore
 ```{r}
 # Extract the year from the date column and create a new column called year
 goalscorers$year <- year(ymd(goalscorers$date))
@@ -105,10 +114,14 @@ penalty_goals_by_year <- penalty_goals_32 %>%
 # Create a bar chart of penalty goals scored by year
 ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity")
+
+  goals_2021 <- goalscorers %>%
+  filter(year(date) == 2021)
 ```
+It is hard to garner a real accurate response from this graph and further exploratory analysis will have to be doner outside of thsi dataset such as the other factors that may have influenced the extreme number of penalties. It was the first year where fans were allowed back into stands after the Corona virus.
+
 
 ## Who has scored the most goals from penalties?
-This is really intersting. Messi scored 4 penalties during this tournament alone, whereas Ronaldo scored 1. Since we are not sure when they will retire, Messi may be about to capture one of the only records Ronaldo has over Messi.
 ```{r}
 # Group the data by player and sum the number of goals scored
 penalty_goals <- penalty_goals %>%
@@ -124,16 +137,15 @@ top_10 <- penalty_goals %>%
   head(10)
 
 print(top_10)
-
-print(penalty_goals)
-
-
 ```
+This is really intersting. Messi scored 4 penalties during this tournament alone, whereas Ronaldo scored 1. Since we are not sure when they will retire, Messi may be about to capture one of the only records Ronaldo has over Messi.
 
-## Who is top of the table?
+
+## If we imagined all games were part of a league, what would that league table look like?
 Which team have won the most. I know I cannot consider the quality of opposition but it sure is interesting. i was surprised that the inclusion of average points (total wins/total games) didn't make much difference. It appears there is a mixture of South American, European and Asian teams making up the top 10. Pretty similiar to the makeup of the top 10 now.
-# Create a new column called result that indicates whether the home team won, lost, or drew the match
+
 ```{r}
+# Create a new column called result that indicates whether the home team won, lost, or drew the match
 results <- results %>%
   mutate(result = ifelse(home_score > away_score, "win",
                          ifelse(home_score == away_score, "draw", "loss")))
@@ -160,9 +172,10 @@ team_records <- team_records %>%
 # Print the resulting data frame
 head(team_records , 20)
 ```
+brazil, Arentina and Mexico are top of the pile here. the latter has a lower avg. points total though and this is a result of playing much more games. It seems that South American teams play more often thatn other teams, but htis could be investigated further. This table is just a bit fun and it does not really truly represent the best teams in the world as it is not weighted by quality of opposition and the other factors that some teams may face than others. For examplem, South America has been dominated by Brazil and Argentina for most of fooball's history with lots of other weaker teams in that regioh, whereas Europe has a wider pool of quality opposition who play each other less regularly.
 
 ## Do bad teams score more own-goals?
-Here we checck the correlation between number of ogs scored their average place on the global league table. I am expecting that the higher up on the list you are, the less likely you are to score an og.
+Here we checck the correlation between number of own-goals (ogs) scored and that team's average place on the global league table above. I am expecting that the higher up on the list you are, the less likely you are to score an og.
 ```{r}
 # Count the number of own goals scored by each team
 own_goals <- goalscorers %>%
@@ -190,11 +203,11 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
 cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
 ```
-That shows a significant and positive relationship between the two varaibles (and a Person correlation of 0.7 for good measure). I am happy to confirm, the more rubbish you are at football, the more likely you are to score an OG.
+That shows a significant and positive relationship between the two varaibles (and a Person correlation of 0.7 for good measure). I am happy to confirm, the more rubbish you are at football, the more likely you are to score an OG. I know this seems obvious to some, but it is nice to put some math behind the assumption.
 
 ## Which country scored the most goals?
 
-We were all thinking it, right?
+Seeing that the south AMerican teams are on top of the overall league table, I am expecting them to do well in this, but there are also some other countries in the world who also dominate tehir region. It will be interesting to see where they come.
 ```{r}
 # Count the number of goals scored by each country
 goals_by_country <- table(goalscorers$team)
@@ -204,35 +217,88 @@ goals_by_country <- sort(goals_by_country, decreasing = TRUE)
 goals_by_country <- as.data.frame(goals_by_country)
 # Rename the columns of the data frame
 colnames(goals_by_country) <- c("team", "goals_scored")
-# Create a bar chart of goals scored by country displaying the top 10 nations
-goals_by_country_top10 <- head(goals_by_country, 10)
-ggplot(data = goals_by_country_top10, aes(x = team, y = goals_scored)) +
+
+# Create a new variable called 'rank' that represents the rank of each country based on their goals_scored value
+goals_by_country_top10$rank <- rank(-goals_by_country_top10$goals_scored)
+
+ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = rank)) +
   geom_bar(stat = "identity") +
-  xlab("Country") + ylab("Goals Scored") +
+  xlab("Goals Scored") + ylab("Country") +
   ggtitle("Goals Scored by Country: Top 10") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 12, vjust = 0.5, face = "bold"),
         axis.text.y = element_text(size = 12, face = "bold")) +
   labs(x = "", y = "") +
-  scale_fill_viridis(name = "Country", option = "D", direction = -1)
+  geom_text(aes(label = goals_scored), hjust = 0, vjust = 0, size = 5) +
+  scale_fill_viridis(name = "Rank", option = "D", direction = -1) +
+ theme(legend.position = "none")
+```
+
+The list of the top 10 highest goal scoring nations are dominate by South America and Europe. There were no notable surpises here but I will create a longer table to see further down the list.
+```{r}
 #Full list here
 print(goals_by_country)
 ```
+Australia is the first non-South American and non-European nation to appear on the list at no. 14. The trend continues as we progess further down the list. I would like to add a queswtion to my further analysis list that epertains to finding out more informatin about how this list breaks down according to contine. eg What %age of the top 100 scoring nations are in each continent. I would expect Europe to have the highest %age.
+
+
 
 ## Who gets battered everywhere they go? (besides Sp*rs)
 ```{r}
-  # Reorder the levels of the home_team variable based on the goals_conceded column
+# Group the data by home_team and count the number of goals conceded by each team
+goals_conceded_by_team <- results %>%
+  group_by(home_team) %>%
+  summarize(goals_conceded = sum(away_score))
+
+# Sort the data frame by the number of goals conceded in descending order
+goals_conceded_by_team <- goals_conceded_by_team %>%
+  arrange(desc(goals_conceded))
+
+# Keep only the top 20 teams with the most goals conceded
+goals_conceded_by_team <- goals_conceded_by_team[1:20,]
+
+# Reorder the levels of the home_team variable based on the goals_conceded column
 goals_conceded_by_team$home_team <- reorder(goals_conceded_by_team$home_team, goals_conceded_by_team$goals_conceded)
 
 # Create a bar chart of goals conceded by team
-ggplot(data = goals_conceded_by_team, aes(x = home_team, y = goals_conceded, fill = home_team)) +
+ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fill = home_team)) +
   geom_bar(stat = "identity") +
-  xlab("Team") + ylab("Goals Conceded") +
+  xlab("Goals Conceded") + ylab("Team") +
   ggtitle("Goals Conceded by Team (Top 20)") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 18, vjust = 0.5, face = "bold")) +
-  labs(x = "", y = "")
+  theme(axis.text.y = element_text(size = 18, face = "bold")) +
+  labs(y = "", x = "") +
+  geom_text(aes(label = goals_conceded), hjust = 0, vjust = 0, size = 5) +
+  theme(legend.position = "none")
 ```
 
-It seems like Northern Europe has taken a pounding with goals conceded. At least they got to see lots of goals? That's good, right Finland? Here is some pretty colours to cheer you up!
+It seems like Northern Europe has taken a pounding with goalsconceded. Some notable surprises are Arentina and France. these two teams clearly score a lot and concende a lot. I would like to also try and investigate the goal difference for each nation( Goals scored - coals conceded).
+```{r}
+# Select the top 10 countries with the highest goal difference
+top_10_high <- goals_by_team %>%
+  top_n(10, goal_difference) %>%
+  arrange(desc(goal_difference))
+
+# Select the top 10 countries with the lowest goal difference
+top_10_low <- goals_by_team %>%
+  top_n(-10, goal_difference) %>%
+  arrange(goal_difference)
+
+# Reorder the levels of the home_team variable based on the goal_difference column
+top_10_high$home_team <- reorder(top_10_high$home_team, top_10_high$goal_difference)
+top_10_low$home_team <- reorder(top_10_low$home_team, top_10_low$goal_difference)
+
+# Create the bar chart
+ggplot() +
+  geom_bar(data = top_10_high, aes(x = home_team, y = goal_difference), stat = "identity", fill = "red") +
+  geom_bar(data = top_10_low, aes(x = home_team, y = goal_difference), stat = "identity", fill = "blue") +
+  xlab("Country") + ylab("Goal Difference") +
+  ggtitle("Goal Difference by Country (Top 10 High and Low)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 12, vjust = 0.5,face = "bold"),
+        axis.text.y = element_text(size = 12, face = "bold")) +
+  labs(x = "", y = "") +
+  scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
+```
+This is some very cool data. So again Brazil and Arentina are doing really well. Finalnd have redeemed themselves a bit and are replaced by Luxembourg as the words most heavily beaten team.
+I need to figure out how to order the axis better. 
 
 ## Is there any pattern to find when goals are scored in a game?
 We have a lot of data and a lot of goals. It would be a shame to not dig a little deeper into this.
@@ -249,7 +315,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 There is a similiar pattern in both halves (seperated by red line) however there appears to be a greater volume of goals at the second half. The fall off at the end determines when goals go in during the rare occasion of extra-time.
 
 ## Extra-time analysis
-Sometimes we get goals in extra- time. let's see if the halbves of extra--time follow the same pattern as a normal game seeing that legs and minds are tired.
+Sometimes we get goals in extra-time. let's see if the halves of extra-time follow the same pattern as a normal game seeing that legs and minds are tired.
 ```{r}
 
 ggplot(data = goalscorers, aes(x = minute)) +
@@ -302,8 +368,12 @@ results$outcome <- ifelse(results$home_score > results$away_score, 1, 0)
 # Create a new variable indicating whether the game was played at home (1) or away (0)
 results$location <- ifelse(results$neutral == TRUE, "neutral", ifelse(results$home_team == results$country, "home", "away"))
 
+
 # Use the t.test function to perform a t-test to compare the mean number of wins for home and away games
 t.test(outcome ~ location, data = results, alternative = "two.sided")
+
+# Use the chisq.test function to perform a chi-squared test to determine whether there is a significant association between the location and the outcome of the game
+chisq.test(table(results$outcome, results$location))
 
 # Use the chisq.test function to perform a chi-squared test to determine whether there is a significant association between the location and the outcome of the game
 chisq.test(table(results$outcome, results$location))
@@ -313,22 +383,19 @@ Based on the results of the Welch Two Sample t-test, there is evidence to sugges
 
 The chi-squared test also indicated that there is a significant association between the location of the game and the outcome (i.e. win, lose, or draw) (X-squared = 191.33, df = 2, p-value < 2.2e-16). This suggests that the location of the game may have an impact on the outcome. However, it's important to note that this analysis only looked at the number of wins and not the actual outcome of the game (i.e. huge win, tight win or draw).
 
-## Has home advantage gor better or worse or not over time?
+## Has home advantage go better or worse or not over time?
 With the porofessioanlism of the sport increasing adn increasing, and with the commercial side of teh game becoming more valued than the fans, has home advantage taken a beating?
 
-```{r}
-
-
 # Create a new column indicating the decade in which each match was played
-results$decade <- floor(as.numeric(as.year(results$date)) / 10) * 10
+#results$decade <- floor(as.numeric(as.year(results$date)) / 10) * 10
 
 # Group the data by decade and location and count the number of wins for each group
-win_counts <- results %>%
-  group_by(decade, location) %>%
-  summarize(wins = sum(outcome == "win"))
+# win_counts <- results %>%
+#  group_by(decade, location) %>%
+ # summarize(wins = sum(outcome == "win"))
 
 # Create a line chart showing the number of home wins and away wins for each decade
-ggplot(win_counts, aes(x = decade, y = wins, color = location)) +
+# ggplot(win_counts, aes(x = decade, y = wins, color = location)) +
   geom_line() +
   xlab("Decade") + ylab("Number of Wins") +
   ggtitle("Number of Wins by Decade and Location") +
@@ -336,42 +403,12 @@ ggplot(win_counts, aes(x = decade, y = wins, color = location)) +
         axis.text.y = element_text(size = 12, face = "bold")) +
   labs(x = "", y = "") +
   scale_color_manual(name = "Location", values = c("#1f77b4", "#ff7f0e")) +
-  scale_x_continuous(breaks = seq(1870, 2010, 10), labels = seq(1870, 2010, 10))
-
-
-
-
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  #scale_x_continuous(breaks = seq(1870, 2010, 10), labels = seq(1870, 2010, 10))
+## Further questions for Analysis
+What do the toal penalty count look like for each footballing assosciation. This would measure how responsive each one is towards change and it will discover of there are any consistent FAs.
 ```{r}
-
-
-
+  git pull
+  git add football_analysis1.1.rmd
+  git commit -m "Updated football_analysis1.1.rmd with ngoal differnce chart and fixed the main errors"
+  git push
 ```
