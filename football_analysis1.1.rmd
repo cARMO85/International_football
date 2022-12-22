@@ -14,6 +14,9 @@ library(viridis)
 library(ggstance)
 library(knitr)
 install.packages("knitr")
+# Rebuild the document
+knitr::knit2html("/Users/paul/Desktop/Football_project/football_analysis1.1.Rmd")
+
 ```
 
 # Introduction
@@ -55,7 +58,7 @@ shootouts_by_country <- shootouts %>%
 shootouts_by_country <- head(shootouts_by_country, 15)
 
 # Print the table using the kable function
-kable(shootouts_by_country)
+knitr::kable(shootouts_by_country)
 ```
 I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
