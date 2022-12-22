@@ -1,7 +1,8 @@
 ---
-title: # **"That's a dive: International Football exploration 2022"**
+title: That's a dive:International Football exploration 2022
 output: github_document
 knit: true
+author: Paul Carmody
 ---
 
 ```r
@@ -223,13 +224,13 @@ penalty_goals_by_year <- penalty_goals_32 %>%
 ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity")
 ```
-
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-7-1.png)
-
 ```r
   goals_2021 <- goalscorers %>%
   filter(year(date) == 2021)
 ```
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-7-1.png){: .center}
+
+
 This graph alone does not provide enough information to accurately determine the cause of the high number of penalties in 2021. Additional analysis outside of this dataset will be necessary, such as considering other factors that may have contributed to the extreme number of penalties. One potential factor to consider is the return of fans to the stands after the COVID-19 pandemic. Further exploration of these and other potential factors is needed to fully understand the cause of the high number of penalties in 2021.
 
 ## Who has scored the most goals from penalties?
@@ -246,8 +247,6 @@ penalty_goals <- penalty_goals %>%
 
 # Select the top 10 rows
 top_10 <- penalty_goals %>%
-  head(10)
-
   kable(print(top_10))
 ```
 
@@ -346,7 +345,7 @@ kable(head(team_records , 20))
 In this analysis, we observe that Brazil, Argentina, and Mexico are among the top ranked teams. However, it is worth noting that Mexico has a lower average points total, which could be due to the fact that they have played more games. It appears that South American teams tend to play more frequently than other teams, but further investigation is needed to confirm this. It is important to note that this ranking does not fully reflect the best teams in the world, as it does not take into consideration the quality of opposition and other factors that may affect certain teams more than others. For example, South America has historically been dominated by Brazil and Argentina, while Europe has a larger pool of high-quality teams who play each other less frequently.
 
 ## Is there a correlaton between Own-Goals scored (OGs) and the quality of the team?
-Her we will examine the relationship between the number of own-goals (OGs) scored and a team's average position in the global league table. Our hypothesis is that higher-ranked teams are less likely to score OGs. To test this, we will use statistical analysis to determine the correlation between these two variables.
+Here we will examine the relationship between the number of own-goals (OGs) scored and a team's average position in the global league table. Our hypothesis is that higher-ranked teams are less likely to score OGs. To test this, we will use statistical analysis to determine the correlation between these two variables.
 
 
 ```r
@@ -431,7 +430,7 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
 
 
 
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-11-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-11-1.png){: .center}
 ```r
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
 correlation <- cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
@@ -460,7 +459,6 @@ colnames(goals_by_country) <- c("team", "goals_scored")
 # Use the head() function to show only the top 40 countries
 kable(head(goals_by_country, n = 40))
 
-
 # Create a new variable called 'rank' that represents the rank of each country based on their goals_scored value
 goals_by_country_top10$rank <- rank(-goals_by_country_top10$goals_scored)
 
@@ -473,241 +471,12 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
   labs(x = "", y = "") +
   geom_text(aes(label = goals_scored), hjust = 0, vjust = 0, size = 5) +
   scale_fill_viridis(name = "Rank", option = "D", direction = -1) +
- theme(legend.position = "none")
+  theme(legend.position = "none")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-12-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure-html/unnamed-chunk-441-1.png){: .center}
 
-The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list.```{r}
-
-```r
-#Full list here
-# kable(head(goals_by_country, n = 40))
-```
-
-```
-##                                 team goals_scored
-## 1                             Brazil         1046
-## 2                            Germany          934
-## 3                          Argentina          914
-## 4                              Spain          807
-## 5                        Netherlands          772
-## 6                            Uruguay          761
-## 7                             Mexico          750
-## 8                            England          727
-## 9                             France          696
-## 10                             Italy          648
-## 11                            Russia          631
-## 12                          Portugal          626
-## 13                           Belgium          612
-## 14                         Australia          602
-## 15                            Sweden          584
-## 16                             Chile          571
-## 17                           Hungary          546
-## 18                           Denmark          529
-## 19                          Paraguay          512
-## 20                     United States          506
-## 21                           Romania          504
-## 22                            Poland          502
-## 23                           Austria          485
-## 24                       Switzerland          463
-## 25                              Iran          458
-## 26                       South Korea          449
-## 27                             Japan          447
-## 28                              Peru          438
-## 29                          Scotland          423
-## 30               Republic of Ireland          416
-## 31                          Bulgaria          405
-## 32                        Costa Rica          403
-## 33                            Turkey          398
-## 34                          Colombia          395
-## 35                            Norway          360
-## 36                             Egypt          358
-## 37                          China PR          357
-## 38                            Greece          357
-## 39                           Nigeria          357
-## 40                      Saudi Arabia          356
-## 41                           Ecuador          349
-## 42                    Czech Republic          342
-## 43                           Croatia          337
-## 44                            Israel          330
-## 45                          Cameroon          321
-## 46                             Wales          321
-## 47                       Ivory Coast          314
-## 48                        Yugoslavia          313
-## 49                           Bolivia          311
-## 50                       New Zealand          307
-## 51                           Tunisia          304
-## 52                  Northern Ireland          301
-## 53                          Honduras          300
-## 54                    Czechoslovakia          292
-## 55                             Ghana          292
-## 56                           Morocco          280
-## 57                            Serbia          273
-## 58                           Finland          270
-## 59                              Iraq          266
-## 60                             Qatar          266
-## 61                           Algeria          257
-## 62                            Canada          249
-## 63                          Slovakia          246
-## 64                       El Salvador          241
-## 65                           Iceland          236
-## 66              United Arab Emirates          236
-## 67                            Zambia          236
-## 68                        Uzbekistan          234
-## 69                            Kuwait          228
-## 70                          DR Congo          226
-## 71                           Ukraine          225
-## 72                             Syria          222
-## 73            Bosnia and Herzegovina          220
-## 74                            Panama          204
-## 75                          Slovenia          202
-## 76                           Senegal          200
-## 77               Trinidad and Tobago          193
-## 78                            Cyprus          189
-## 79                         Venezuela          186
-## 80                           Jamaica          182
-## 81                            Guinea          180
-## 82                         Guatemala          178
-## 83                   North Macedonia          171
-## 84                           Albania          170
-## 85                         German DR          168
-## 86                            Latvia          164
-## 87                              Oman          151
-## 88                           Bahrain          149
-## 89                      South Africa          147
-## 90                      Burkina Faso          146
-## 91                          Thailand          144
-## 92                             Haiti          138
-## 93                       North Korea          138
-## 94                            Jordan          135
-## 95                           Georgia          128
-## 96                        Luxembourg          128
-## 97                           Armenia          126
-## 98                              Mali          126
-## 99                           Estonia          123
-## 100                          Belarus          121
-## 101                           Angola          120
-## 102                        Lithuania          118
-## 103                           Tahiti          115
-## 104                       Kazakhstan          113
-## 105                  Solomon Islands          112
-## 106                          Lebanon          110
-## 107                             Fiji          109
-## 108                        Hong Kong          104
-## 109                    New Caledonia          104
-## 110                        Indonesia          102
-## 111                            Congo           99
-## 112                             Cuba           96
-## 113                         Malaysia           96
-## 114                             Togo           96
-## 115                          Moldova           95
-## 116                            Malta           94
-## 117                            Sudan           93
-## 118                            Kenya           92
-## 119                         Ethiopia           91
-## 120                            Gabon           88
-## 121                          Bermuda           87
-## 122                    Faroe Islands           85
-## 123                         Zimbabwe           83
-## 124                     Turkmenistan           82
-## 125                       Montenegro           81
-## 126                        Singapore           81
-## 127 Saint Vincent and the Grenadines           80
-## 128                            Libya           79
-## 129                       Azerbaijan           75
-## 130                         Suriname           74
-## 131            Saint Kitts and Nevis           72
-## 132                          Vietnam           72
-## 133                       Tajikistan           71
-## 134                          Vanuatu           71
-## 135                           Malawi           68
-## 136                           Uganda           65
-## 137              Antigua and Barbuda           64
-## 138                       Kyrgyzstan           63
-## 139                          Curaçao           61
-## 140                            India           61
-## 141                            Benin           58
-## 142                            Yemen           58
-## 143                       Madagascar           56
-## 144                          Namibia           56
-## 145                        Palestine           56
-## 146                 Papua New Guinea           56
-## 147                          Liberia           55
-## 148                         Tanzania           51
-## 149               Dominican Republic           50
-## 150                          Grenada           49
-## 151                    Liechtenstein           46
-## 152                           Rwanda           46
-## 153                     Sierra Leone           45
-## 154                           Taiwan           44
-## 155                         Maldives           43
-## 156                       Cape Verde           42
-## 157                       Bangladesh           39
-## 158                       Mozambique           39
-## 159                           Belize           38
-## 160                            Niger           38
-## 161                          Andorra           36
-## 162                Equatorial Guinea           36
-## 163                        Nicaragua           36
-## 164                         Barbados           35
-## 165                         Botswana           32
-## 166                           Guyana           32
-## 167                      Saint Lucia           32
-## 168                      Puerto Rico           31
-## 169                         Cambodia           30
-## 170                      Philippines           29
-## 171                            Samoa           28
-## 172                            Nepal           27
-## 173                           Gambia           25
-## 174                            Aruba           23
-## 175                        Sri Lanka           23
-## 176                           Kosovo           22
-## 177                          Bahamas           20
-## 178                         Dominica           20
-## 179                             Laos           20
-## 180                       San Marino           20
-## 181                          Burundi           19
-## 182                       Martinique           19
-## 183                          Myanmar           19
-## 184                    Guinea-Bissau           18
-## 185                       Mauritania           17
-## 186                       Montserrat           17
-## 187                            Tonga           17
-## 188                             Chad           16
-## 189                         Eswatini           16
-## 190                            Macau           16
-## 191                        Mauritius           16
-## 192                      Afghanistan           15
-## 193                       Guadeloupe           15
-## 194                          Lesotho           15
-## 195                     Cook Islands           13
-## 196                         Pakistan           13
-## 197         Central African Republic           12
-## 198                         Djibouti           12
-## 199                        Gibraltar           12
-## 200                         Mongolia           11
-## 201                   American Samoa           10
-## 202                             Guam           10
-## 203                           Bhutan            9
-## 204                          Comoros            9
-## 205                 Vietnam Republic            9
-## 206                   Cayman Islands            8
-## 207     United States Virgin Islands            8
-## 208           British Virgin Islands            7
-## 209                       Seychelles            6
-## 210                      Timor-Leste            6
-## 211         Turks and Caicos Islands            6
-## 212                           Brunei            5
-## 213            São Tomé and Príncipe            5
-## 214                          Eritrea            4
-## 215                         Saarland            4
-## 216                        Yemen DPR            4
-## 217                          Somalia            3
-## 218                         Anguilla            2
-## 219                    French Guiana            2
-## 220                      South Sudan            2
-```
+The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list. Also please see table below for more details.
 
 
 
@@ -933,6 +702,9 @@ The top 10 countries with the highest number of goals scored are primarily from 
 |Anguilla                         |            2|
 |French Guiana                    |            2|
 |South Sudan                      |            2|
+
+
+
 Australia is the first non-South American and non-European country to appear on the list of top goal-scoring nations, ranking at number 14. As we move further down the list, this trend continues. In light of this, we will add a new question to our list of further analyses: what percentage of the top 100 goal-scoring nations belong to each continent? We anticipate that Europe will have the highest percentage.
 
 ## Who gets battered everywhere they go? (besides Sp*rs)
@@ -964,7 +736,7 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   theme(legend.position = "none")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png){: .center}
 
 Our analysis shows that Northern European countries have high numbers of goals conceded. Argentina and France stand out as notable exceptions, as these countries score and concede a large number of goals. In addition to exploring this trend, we will also investigate the goal difference for each country (goals scored minus goals conceded).
 
@@ -1010,7 +782,8 @@ ggplot() +
   scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-411-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-411-1.png){: .center}
+
 
 
 Our analysis has revealed interesting patterns in the data. Brazil and Argentina stand out as consistently strong performers. Finland has improved their goal difference, while Luxembourg has taken their place as the most heavily beaten team.
@@ -1033,7 +806,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-413-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-448-1.png){: .center}
 
 
 Our analysis shows that there is a similar pattern of goal scoring in both halves of a game, with a higher volume of goals scored in the second half. There is also a decrease in goals scored at the end of the game. When we look at extra-time, we see a similar pattern, with goals occurring more frequently in the second half of extra-time. This raises the question of whether the halves of extra-time follow the same pattern as a regular game, considering that players may be physically and mentally tired at this point. To explore this further, we will analyze the data on goals scored during extra-time.
@@ -1054,7 +827,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-392-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-449-1.png){: .center}
 
 
 Our analysis of goals scored during extra-time has revealed an interesting pattern. Similar to the halves of a regular game, there is a positive slope indicating an increase in goals scored over time. However, the trend appears to be less predictable in extra-time compared to the equivalent periods in a 90-minute game. This suggests that the timing of goals scored during extra-time may be less predictable than in a full game.
@@ -1087,7 +860,7 @@ ggplot(data = all_results, aes(x = location)) +
   labs(x = "", y = "")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-450-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-450-1.png){: .center}
 
 
 Our analysis shows that more teams win when playing at home compared to when they play away. However, to make a more conclusive assessment of the home advantage, we need to compare a team's performance at home to their performance away. By comparing these two metrics, we can better determine whether the home advantage is a real phenomenon in football.
@@ -1154,7 +927,7 @@ ggplot(data = all_results, aes(x = location, y = home_score)) +
   labs(x = "", y = "")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-453-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-453-1.png){: .center}
 
 
 The box plot of wins by location provides additional insight into the question of whether home advantage exists in football matches. This plot visualizes the distribution of wins for each location (home, away, and draw). By comparing the median and range of the home and away wins, we can determine whether there are significant differences between the two groups.
@@ -1173,9 +946,6 @@ results_by_year <- results %>%
             draws = sum(home_score == away_score))
 ```
 
-```
-
-```
 
 ```r
 # Divide the totals by the number of games played in each year to get the average number of home wins, away wins, and draws per year
@@ -1214,12 +984,10 @@ ggplot(data = results_by_year, aes(x = year)) +
   geom_smooth(aes(y = away_wins, color = "Away Wins")) # nolint 
 ```
 
-```
-
-```
 
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-454-2.png)
+
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-454-2.png){: .center}
 
 
 Our analysis of the data has provided insight into the home advantage in football. We have observed that home wins have consistently outnumbered losses and home losses, and that the difference between home wins and away wins or draws has been relatively small. However, in recent years, we have seen a reduction in the home advantage. Based on this information, it appears that the home advantage does exist and has potentially become stronger over time.
@@ -1241,11 +1009,11 @@ ggplot(data = countries_per_match, aes(x = date, y = countries)) +
   scale_color_manual(name = "Line Type", values = c("red" = "red", "smooth" = "black"))
 ```
 
+! [image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png){: .center}
 
 
-```
 
-! [image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png)
+
 
 
 Based on the data, it appears that football experienced significant growth in popularity in the late 20th century. This could be seen in the increasing number of countries participating in the sport, the expansion of professional leagues, and the growing number of registered players and fans. It is likely that a combination of factors contributed to the rise of football as the world's most popular game, including its accessibility, global appeal, and cultural significance.
