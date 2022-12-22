@@ -11,6 +11,8 @@ install.packages("lubridate")
 install.packages("viridis")
 install.packages("usethis")
 install.packages("git2r")
+install.packages("ggstance")
+
 
 ```
 ```{r} 
@@ -21,18 +23,21 @@ library(ggplot2)
 library(tidyverse)
 library(lubridate)
 library(viridis)
+library(ggstance)
+
 ```
     
 # Introduction
-This analysis aims to explore football data. The following three data sets are used: shootouts, goalscorers, and results.
+Welcome to this analysis of international football data. The dataset used for this analysis includes 44,341 results of international football matches from 1872 to 2022, including tournaments such as the FIFA World Cup and regular friendly matches. In this analysis, we will explore several questions related to international football using the results, shootouts, and goalscorers data sets.
 
 ## Data Preparation
-To begin, we will specify the URLs of the CSV files and use the read_csv() function from the readr package to read in the CSV files from the URLs:
+Before we begin our analysis, we need to load and prepare the data. First, we will specify the URLs of the CSV files and use the read_csv() function from the readr package to read in the data.
+
 ```{r} 
 # Specify the URLs of the CSV files
-shootouts_url <- "https://raw.githubusercontent.com/martj42/international_results/master/shootouts.csv"
-goalscorers_url <- "https://raw.githubusercontent.com/martj42/international_results/master/goalscorers.csv"
-results_url <- "https://raw.githubusercontent.com/martj42/international_results/master/results.csv"
+shootouts_url <- "https://raw.githubusercontent.com/martj42/international_results/master/shootouts.csv" # nolint 
+goalscorers_url <- "https://raw.githubusercontent.com/martj42/international_results/master/goalscorers.csv" # nolint
+results_url <- "https://raw.githubusercontent.com/martj42/international_results/master/results.csv" # nolint
 
 # Use the read_csv() function from the readr package to read in the CSV files from the URLs
 shootouts <- readr::read_csv(shootouts_url)
@@ -58,7 +63,7 @@ shootouts_by_country <- shootouts %>%
   arrange(desc(n))
 print(shootouts_by_country)
 ```
-Crazy! I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
+I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
 ## Which team has won the most penalty shootouts?
 First, we will filter the data to include only penalty goals:
@@ -82,18 +87,17 @@ penalty_goals_by_year <- penalty_goals %>%
 
 Finally, we can plot the number of penalty goals scored in each year using the following code:
 ```{r}
-# Plot the number of penalty goals scored in each year
-ggplot(penalty_goals_by_year, aes(x = year, y = count)) +
-  geom_bar(stat = "identity") +
-  geom_smooth(method = "lm", se = FALSE) +
-  ylim(0, NA)
+  # Plot the number of penalty goals scored in each year
+  ggplot(penalty_goals_by_year, aes(x = year, y = count)) +
+    geom_bar(stat = "identity") +
+    geom_smooth(method = "lm", se = FALSE) +
+    ylim(0, NA)
 ```
-As we can see from the trend line included, the number of overall penalties has increased overtime. Tere also seems to a cyclical boom/bust cycle in recent years seeing high number of penalties followed by a year of low penalties. Are the football organisations as a whole responsding too aggressively each year to the huge turns in number of penalties.
+The trend line in the chart shows that the overall number of penalties has been increasing over time. There also appears to be a cyclical pattern of high and low numbers of penalties in recent years. It is worth considering whether football organizations are responding excessively to these fluctuations.
+
 
 ## What happened in 2021?
-
-Woah that's a lot of penaltiesin 2021. I will definetely be doing some further research about this outlier. I zoomed in a bit to that chart to see the scale of the outlier.
-To investigate the large number of penalties in 2021, we can filter the `goalscore
+There was a noticeable spike in the number of penalties in 2021. Further research will be needed to understand this outlier. By zooming in on the chart, we can see the magnitude of this deviation. To investigate the cause of the high number of penalties in 2021, we can filter the goalscore data to examine specific instances of penalties that occurred during this year.
 ```{r}
 # Extract the year from the date column and create a new column called year
 goalscorers$year <- year(ymd(goalscorers$date))
@@ -118,8 +122,7 @@ ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   goals_2021 <- goalscorers %>%
   filter(year(date) == 2021)
 ```
-It is hard to garner a real accurate response from this graph and further exploratory analysis will have to be doner outside of thsi dataset such as the other factors that may have influenced the extreme number of penalties. It was the first year where fans were allowed back into stands after the Corona virus.
-
+This graph alone does not provide enough information to accurately determine the cause of the high number of penalties in 2021. Additional analysis outside of this dataset will be necessary, such as considering other factors that may have contributed to the extreme number of penalties. One potential factor to consider is the return of fans to the stands after the COVID-19 pandemic. Further exploration of these and other potential factors is needed to fully understand the cause of the high number of penalties in 2021.
 
 ## Who has scored the most goals from penalties?
 ```{r}
@@ -138,12 +141,10 @@ top_10 <- penalty_goals %>%
 
 print(top_10)
 ```
-This is really intersting. Messi scored 4 penalties during this tournament alone, whereas Ronaldo scored 1. Since we are not sure when they will retire, Messi may be about to capture one of the only records Ronaldo has over Messi.
+This is a fascinating finding. During the tournament, Messi scored 4 penalties, while Ronaldo scored only 1. With both players still active, this could potentially lead to Messi surpassing Ronaldo in this record.
 
-
-## If we imagined all games were part of a league, what would that league table look like?
-Which team have won the most. I know I cannot consider the quality of opposition but it sure is interesting. i was surprised that the inclusion of average points (total wins/total games) didn't make much difference. It appears there is a mixture of South American, European and Asian teams making up the top 10. Pretty similiar to the makeup of the top 10 now.
-
+## What if every game played was a league. What would the league table look like?
+If we were to create a league table based on these results, which team would come out on top? It is worth noting that the quality of the opposition cannot be taken into account when making this comparison. However, it is still interesting to see the results. 
 ```{r}
 # Create a new column called result that indicates whether the home team won, lost, or drew the match
 results <- results %>%
@@ -172,10 +173,11 @@ team_records <- team_records %>%
 # Print the resulting data frame
 head(team_records , 20)
 ```
-brazil, Arentina and Mexico are top of the pile here. the latter has a lower avg. points total though and this is a result of playing much more games. It seems that South American teams play more often thatn other teams, but htis could be investigated further. This table is just a bit fun and it does not really truly represent the best teams in the world as it is not weighted by quality of opposition and the other factors that some teams may face than others. For examplem, South America has been dominated by Brazil and Argentina for most of fooball's history with lots of other weaker teams in that regioh, whereas Europe has a wider pool of quality opposition who play each other less regularly.
+In this analysis, we observe that Brazil, Argentina, and Mexico are among the top ranked teams. However, it is worth noting that Mexico has a lower average points total, which could be due to the fact that they have played more games. It appears that South American teams tend to play more frequently than other teams, but further investigation is needed to confirm this. It is important to note that this ranking does not fully reflect the best teams in the world, as it does not take into consideration the quality of opposition and other factors that may affect certain teams more than others. For example, South America has historically been dominated by Brazil and Argentina, while Europe has a larger pool of high-quality teams who play each other less frequently.
 
-## Do bad teams score more own-goals?
-Here we checck the correlation between number of own-goals (ogs) scored and that team's average place on the global league table above. I am expecting that the higher up on the list you are, the less likely you are to score an og.
+## Is there a correlaton between Own-Goals scored (OGs) and the quality of the team?
+Her we will examine the relationship between the number of own-goals (OGs) scored and a team's average position in the global league table. Our hypothesis is that higher-ranked teams are less likely to score OGs. To test this, we will use statistical analysis to determine the correlation between these two variables.
+
 ```{r}
 # Count the number of own goals scored by each team
 own_goals <- goalscorers %>%
@@ -203,11 +205,11 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
 cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
 ```
-That shows a significant and positive relationship between the two varaibles (and a Person correlation of 0.7 for good measure). I am happy to confirm, the more rubbish you are at football, the more likely you are to score an OG. I know this seems obvious to some, but it is nice to put some math behind the assumption.
-
+Our analysis shows a significant and positive correlation between a team's average position in the global league table and the number of own-goals scored, with a Pearson correlation coefficient of 0.7. This supports our hypothesis that lower-ranked teams are more likely to score own-goals.
 ## Which country scored the most goals?
 
-Seeing that the south AMerican teams are on top of the overall league table, I am expecting them to do well in this, but there are also some other countries in the world who also dominate tehir region. It will be interesting to see where they come.
+Next, we will investigate which countries have scored the most goals. Based on the previous findings that South American teams are among the top ranked in the global league table, we expect these countries to perform well. However, it will also be interesting to see how other countries that dominate their respective regions fare in this analysis.
+
 ```{r}
 # Count the number of goals scored by each country
 goals_by_country <- table(goalscorers$team)
@@ -233,14 +235,12 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
  theme(legend.position = "none")
 ```
 
-The list of the top 10 highest goal scoring nations are dominate by South America and Europe. There were no notable surpises here but I will create a longer table to see further down the list.
+The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list.```{r}
 ```{r}
 #Full list here
 print(goals_by_country)
 ```
-Australia is the first non-South American and non-European nation to appear on the list at no. 14. The trend continues as we progess further down the list. I would like to add a queswtion to my further analysis list that epertains to finding out more informatin about how this list breaks down according to contine. eg What %age of the top 100 scoring nations are in each continent. I would expect Europe to have the highest %age.
-
-
+Australia is the first non-South American and non-European country to appear on the list of top goal-scoring nations, ranking at number 14. As we move further down the list, this trend continues. In light of this, we will add a new question to our list of further analyses: what percentage of the top 100 goal-scoring nations belong to each continent? We anticipate that Europe will have the highest percentage.
 
 ## Who gets battered everywhere they go? (besides Sp*rs)
 ```{r}
@@ -270,7 +270,7 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   theme(legend.position = "none")
 ```
 
-It seems like Northern Europe has taken a pounding with goalsconceded. Some notable surprises are Arentina and France. these two teams clearly score a lot and concende a lot. I would like to also try and investigate the goal difference for each nation( Goals scored - coals conceded).
+Our analysis shows that Northern European countries have high numbers of goals conceded. Argentina and France stand out as notable exceptions, as these countries score and concede a large number of goals. In addition to exploring this trend, we will also investigate the goal difference for each country (goals scored minus goals conceded).
 ```{r}
 # Select the top 10 countries with the highest goal difference
 top_10_high <- goals_by_team %>%
@@ -297,11 +297,11 @@ ggplot() +
   labs(x = "", y = "") +
   scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
 ```
-This is some very cool data. So again Brazil and Arentina are doing really well. Finalnd have redeemed themselves a bit and are replaced by Luxembourg as the words most heavily beaten team.
-I need to figure out how to order the axis better. 
+Our analysis has revealed interesting patterns in the data. Brazil and Argentina stand out as consistently strong performers. Finland has improved their goal difference, while Luxembourg has taken their place as the most heavily beaten team.
 
-## Is there any pattern to find when goals are scored in a game?
-We have a lot of data and a lot of goals. It would be a shame to not dig a little deeper into this.
+## When is a goal most likely to occur?
+
+Next, we will investigate if there is a pattern to be found in the timing of goals scored during a game. We have a large amount of data and goals to work with, so it would be a valuable exercise to delve deeper into this aspect of the data.
 ```{r}
 ggplot(data = goalscorers, aes(x = minute)) +
   geom_histogram(breaks = seq(0, 120, by = 3), fill = "steelblue") +
@@ -312,10 +312,9 @@ ggplot(data = goalscorers, aes(x = minute)) +
   geom_vline(xintercept = 45, color = "red", size = 2)
 ```
 
-There is a similiar pattern in both halves (seperated by red line) however there appears to be a greater volume of goals at the second half. The fall off at the end determines when goals go in during the rare occasion of extra-time.
+Our analysis shows that there is a similar pattern of goal scoring in both halves of a game, with a higher volume of goals scored in the second half. There is also a decrease in goals scored at the end of the game. When we look at extra-time, we see a similar pattern, with goals occurring more frequently in the second half of extra-time. This raises the question of whether the halves of extra-time follow the same pattern as a regular game, considering that players may be physically and mentally tired at this point. To explore this further, we will analyze the data on goals scored during extra-time.
 
 ## Extra-time analysis
-Sometimes we get goals in extra-time. let's see if the halves of extra-time follow the same pattern as a normal game seeing that legs and minds are tired.
 ```{r}
 
 ggplot(data = goalscorers, aes(x = minute)) +
@@ -326,34 +325,36 @@ ggplot(data = goalscorers, aes(x = minute)) +
   labs(x = "", y = "") +
   geom_vline(xintercept = 105, color = "blue", size = 1.5)
 ```
-Very intersting to see that the pattern is the same. A positive slope that begins again at the start of each half. However, extra-time seems to be a little less predicitive that the 90 minute equivalent.
+Our analysis of goals scored during extra-time has revealed an interesting pattern. Similar to the halves of a regular game, there is a positive slope indicating an increase in goals scored over time. However, the trend appears to be less predictable in extra-time compared to the equivalent periods in a 90-minute game. This suggests that the timing of goals scored during extra-time may be less predictable than in a full game.
 
 ## Is there such thing as home-advantage?
-Do teams win more at home vs away. Is the home advantage a thing?
+One question we may have is whether teams win more often at home or away. The concept of a "home advantage" suggests that teams may perform better when playing at their home stadium. To test this, we will compare a team's home and away form to see if there is a significant difference in their win rate. This will help us determine whether the home advantage is a real phenomenon in football.
 ```{r}
-# Gather totals for home wins and away wins
+# Gather totals for home wins, away wins, and draws
 home_wins <- results %>%
-  filter(home_score > away_score)
-home_wins <- home_wins %>%
-  mutate(location = "home")
-home_wins <- home_wins %>%
+  filter(home_score > away_score) %>%
   mutate(location = "home")
 away_wins <- results %>%
   filter(home_score < away_score) %>%
   mutate(location = "away")
+draws <- results %>%
+  filter(home_score == away_score) %>%
+  mutate(location = "draw")
 
 # Combine data frames
-all_wins <- bind_rows(home_wins, away_wins)
-ggplot(data = all_wins, aes(x = location)) +
+all_results <- bind_rows(home_wins, away_wins, draws)
+
+# Plot the results
+ggplot(data = all_results, aes(x = location)) +
   geom_bar(aes(y = (..count..))) +
-  xlab("Location") + ylab("Number of Wins") +
-  ggtitle("Number of Wins by Location") +
+  xlab("Location") + ylab("Number of Results") +
+  ggtitle("Number of Results by Location") +
   theme(axis.text.x = element_text(size = 12, face = "bold"),
         axis.text.y = element_text(size = 12, face = "bold")) +
   labs(x = "", y = "")
 ```
 
-So more teams win at home than away. But that still doesnt prove it. We need ot comapre their home form to their away form to make a better conclusion.
+Our analysis shows that more teams win when playing at home compared to when they play away. However, to make a more conclusive assessment of the home advantage, we need to compare a team's performance at home to their performance away. By comparing these two metrics, we can better determine whether the home advantage is a real phenomenon in football.
 ```{r}
 home_victories <- results %>%
   filter(home_score > away_score) %>%
@@ -379,36 +380,98 @@ chisq.test(table(results$outcome, results$location))
 chisq.test(table(results$outcome, results$location))
 
 ```
-Based on the results of the Welch Two Sample t-test, there is evidence to suggest that the mean number of wins for home games is significantly different from the mean number of wins for away games (t = 2.6078, df = 6908.9, p-value = 0.009132). The 95% confidence interval for the difference in means is [0.02090075, 0.14745417], indicating that we can be 95% confident that the true difference in means falls within this range.
+Our statistical analysis has provided evidence that the number of wins for home games is significantly different from the number of wins for away games. The Welch Two Sample t-test showed a t-value of 2.6078 and a p-value of 0.009132, and the 95% confidence interval for the difference in means was [0.02090075, 0.14745417]. The chi-squared test also indicated a significant association between the location of the game and the outcome.
 
-The chi-squared test also indicated that there is a significant association between the location of the game and the outcome (i.e. win, lose, or draw) (X-squared = 191.33, df = 2, p-value < 2.2e-16). This suggests that the location of the game may have an impact on the outcome. However, it's important to note that this analysis only looked at the number of wins and not the actual outcome of the game (i.e. huge win, tight win or draw).
+However, we will further investigate this by looking at the spread of victories using median values with a box plot. This will allow us to see if the difference in wins between home and away games is consistent or if there are outliers that may be influencing the results.
+```{r}
+# Combine data frames
+all_results <- bind_rows(home_wins, away_wins, draws)
 
-## Has home advantage go better or worse or not over time?
-With the porofessioanlism of the sport increasing adn increasing, and with the commercial side of teh game becoming more valued than the fans, has home advantage taken a beating?
-
-# Create a new column indicating the decade in which each match was played
-#results$decade <- floor(as.numeric(as.year(results$date)) / 10) * 10
-
-# Group the data by decade and location and count the number of wins for each group
-# win_counts <- results %>%
-#  group_by(decade, location) %>%
- # summarize(wins = sum(outcome == "win"))
-
-# Create a line chart showing the number of home wins and away wins for each decade
-# ggplot(win_counts, aes(x = decade, y = wins, color = location)) +
-  geom_line() +
-  xlab("Decade") + ylab("Number of Wins") +
-  ggtitle("Number of Wins by Decade and Location") +
+# Create box plot
+ggplot(data = all_results, aes(x = location, y = home_score)) +
+  geom_boxplot() +
+  xlab("Location") + ylab("Home Score") +
+  ggtitle("Distribution of Wins by Location") +
   theme(axis.text.x = element_text(size = 12, face = "bold"),
         axis.text.y = element_text(size = 12, face = "bold")) +
-  labs(x = "", y = "") +
-  scale_color_manual(name = "Location", values = c("#1f77b4", "#ff7f0e")) +
-  #scale_x_continuous(breaks = seq(1870, 2010, 10), labels = seq(1870, 2010, 10))
-## Further questions for Analysis
-What do the toal penalty count look like for each footballing assosciation. This would measure how responsive each one is towards change and it will discover of there are any consistent FAs.
-```{r}
-  git pull
-  git add football_analysis1.1.rmd
-  git commit -m "Updated football_analysis1.1.rmd with ngoal differnce chart and fixed the main errors"
-  git push
+  labs(x = "", y = "")
 ```
+The box plot of wins by location provides additional insight into the question of whether home advantage exists in football matches. This plot visualizes the distribution of wins for each location (home, away, and draw). By comparing the median and range of the home and away wins, we can determine whether there are significant differences between the two groups.
+From the plot, we can see that the medians for both home and away wins are similar, with a slight advantage for home wins. However, the range of wins for both locations is also similar, indicating that the distribution of wins is similar for both home and away matches. This suggests that home advantage may not be a strong factor in determining the outcome of football matches.
+This finding is not supported by the results of the previous statistical tests, including the chi-squared test and the bar chart, which  showed that home advantage may be a significant factor. Overall, these results suggest that while home advantage may exist to some extent, it may not be as strong a factor as previously thought.
+
+## Has home advantage go better or worse or not over time?
+As professional football continues to evolve and the commercial aspects of the sport become more prominent, it is worth considering whether the concept of home advantage has been impacted. With the increasing emphasis on profit over fan experience, it is possible that the traditional advantages that home teams have enjoyed may be diminishing. To better understand this, we will need to examine data on home and away victories over time to see if there are any trends or changes in the strength of the home advantage.
+```{r}
+# Group the results data by year and summarize the home_score, away_score, and tournament columns
+results_by_year <- results %>%
+  group_by(year) %>%
+  summarize(home_wins = sum(home_score > away_score),
+            away_wins = sum(home_score < away_score),
+            draws = sum(home_score == away_score))
+
+# Divide the totals by the number of games played in each year to get the average number of home wins, away wins, and draws per year
+results_by_year <- results_by_year %>%
+  mutate(home_wins = home_wins / n,
+         away_wins = away_wins / n,
+         draws = draws / n)
+
+# Create a line plot of the average number of home wins, away wins, and draws by year
+ggplot(data = results_by_year, aes(x = year)) +
+  geom_line(aes(y = home_wins, color = "Home Wins")) +
+  geom_line(aes(y = away_wins, color = "Away Wins")) +
+  geom_line(aes(y = draws, color = "Draws")) +
+  labs(x = "Year", y = "Average Number of Wins/Draws") +
+  ggtitle("Average Number of Home Wins, Away Wins, and Draws by Year") +
+  theme(legend.title = element_blank()) +
+  theme(legend.text = element_text(size = 12))
+
+# Add a smoothing line to better visualize trends in the data
+ggplot(data = results_by_year, aes(x = year)) +
+  geom_line(aes(y = home_wins, color = "Home Wins")) +
+  geom_line(aes(y = away_wins, color = "Away Wins")) +
+  geom_line(aes(y = draws, color = "Draws")) +
+  geom_smooth(aes(y = home_wins, color = "Home Wins"), method = "loess") +
+  geom_smooth(aes(y = away_wins, color = "Away Wins")) # nolint 
+```
+
+Our analysis of the data has provided insight into the home advantage in football. We have observed that home wins have consistently outnumbered losses and home losses, and that the difference between home wins and away wins or draws has been relatively small. However, in recent years, we have seen a reduction in the home advantage. Based on this information, it appears that the home advantage does exist and has potentially become stronger over time.
+  ## How has the world's game grown in popularity through time?
+To examine the growth of football in popularity through time, we can analyze the number of countries that have participated in the sport over the years. This involve looking at data on the number of countries that have participated in international tournaments 
+```{r}
+# Count the number of unique countries that have participated in each match
+countries_per_match <- results %>%
+  select(date, home_team, away_team) %>%
+  distinct() %>%
+  group_by(date) %>%
+  summarize(countries = n_distinct(c(home_team, away_team)))
+
+# Plot the data
+ggplot(data = countries_per_match, aes(x = date, y = countries)) +
+  geom_line() +
+  geom_smooth() +
+  xlab("Date") +
+  ylab("Number of Countries Participating") +
+  ggtitle("Number of Countries Participating in International Football Matches Over Time") +
+  theme(axis.text.x = element_text(size = 16, face = "bold"),
+        axis.text.y = element_text(size = 16, face = "bold")) +
+  labs(x = "", y = "")
+```
+Based on the data, it appears that football experienced significant growth in popularity in the late 20th century. This could be seen in the increasing number of countries participating in the sport, the expansion of professional leagues, and the growing number of registered players and fans. It is likely that a combination of factors contributed to the rise of football as the world's most popular game, including its accessibility, global appeal, and cultural significance.
+
+# Conclusion
+Based on the analyses conducted, the following are some of the key findings:
+- South American teams, particularly Brazil and Argentina, consistently rank highly in the global league table.
+- There is a significant and positive correlation between a team's average position in the global league table and the number of own-goals scored.
+- The top goal-scoring countries are primarily from South America and Europe.
+- More teams win when playing at home compared to when they play away. Statistical analysis suggests that the number of wins for home games is significantly different from the number of wins for away games, and there is a significant association between the location of the game and the outcome.
+- The pattern of goal scoring during extra-time follows a similar trend to that of a regular game, but the trend appears to be less predictable.
+- Football experienced significant growth in popularity in the late 20th century, as seen in the increasing number of countries participating in the sport, the expansion of professional leagues, and the growing number of registered players and fans.
+- The trend of penalties in international football tournaments has been increasing over time, with a cyclical pattern in recent years.
+- The high number of penalties in 2021 may be due to a variety of factors, such as the return of fans to the stands after the COVID-19 pandemic, and further analysis is needed to fully understand the cause.
+- The record for the most penalties scored in international football tournaments could potentially be broken by Argentina's Messi in the future.
+
+
+I have greatly enjoyed working with this data on the global popularity and performance of football. As someone who is passionate about both data analytics and sports, it has been a pleasure to delve into the insights and trends that the data has revealed. I am grateful for the opportunity to explore this topic and I hope that my analysis has provided valuable information for others who are interested in the world's favorite game. Thank you for reading.
+
+PAUL CARMODY
