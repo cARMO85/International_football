@@ -3,18 +3,6 @@ title: "That's a dive: International Football exploration 2022"
 output: github_document
 knit: true
 ---
-
-```{r} 
-# Install required packages
-install.packages("tidyverse")
-install.packages("lubridate")
-install.packages("viridis")
-install.packages("usethis")
-install.packages("git2r")
-install.packages("ggstance")
-
-
-```
 ```{r} 
 # Load required packages
 library(readr)
@@ -24,9 +12,10 @@ library(tidyverse)
 library(lubridate)
 library(viridis)
 library(ggstance)
-
+library(knitr)
+install.packages("knitr")
 ```
-    
+
 # Introduction
 Welcome to this analysis of international football data. The dataset used for this analysis includes 44,341 results of international football matches from 1872 to 2022, including tournaments such as the FIFA World Cup and regular friendly matches. In this analysis, we will explore several questions related to international football using the results, shootouts, and goalscorers data sets.
 
@@ -61,7 +50,12 @@ shootouts_by_country <- shootouts %>%
   group_by(winner) %>%
   tally() %>%
   arrange(desc(n))
-print(shootouts_by_country)
+
+# Select the top 15 rows of the table
+shootouts_by_country <- head(shootouts_by_country, 15)
+
+# Print the table using the kable function
+kable(shootouts_by_country)
 ```
 I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
