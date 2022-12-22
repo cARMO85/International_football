@@ -189,11 +189,12 @@ Finally, we can plot the number of penalty goals scored in each year using the f
   geom_bar(stat = "identity") +
   geom_smooth(method = "lm", se = FALSE) +
   ylim(0, NA)
+
+  
 ```
 
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-6-1.png)
 
-
-![plot of chunk unnamed-chunk-6](football_analysisv2_files/figure/unnamed-chunk-6-1.png)
 
 The trend line in the chart shows that the overall number of penalties has been increasing over time. There also appears to be a cyclical pattern of high and low numbers of penalties in recent years. It is worth considering whether football organizations are responding excessively to these fluctuations.
 
