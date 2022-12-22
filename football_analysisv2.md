@@ -228,7 +228,7 @@ ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   goals_2021 <- goalscorers %>%
   filter(year(date) == 2021)
 ```
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-7-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-7-1.png)
 
 
 This graph alone does not provide enough information to accurately determine the cause of the high number of penalties in 2021. Additional analysis outside of this dataset will be necessary, such as considering other factors that may have contributed to the extreme number of penalties. One potential factor to consider is the return of fans to the stands after the COVID-19 pandemic. Further exploration of these and other potential factors is needed to fully understand the cause of the high number of penalties in 2021.
@@ -430,7 +430,8 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
 
 
 
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-11-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-11-1.png)
+
 ```r
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
 correlation <- cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
@@ -474,7 +475,7 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
   theme(legend.position = "none")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure-html/unnamed-chunk-441-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure-html/unnamed-chunk-441-1.png)
 
 The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list. Also please see table below for more details.
 
@@ -736,7 +737,7 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   theme(legend.position = "none")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png)
 
 Our analysis shows that Northern European countries have high numbers of goals conceded. Argentina and France stand out as notable exceptions, as these countries score and concede a large number of goals. In addition to exploring this trend, we will also investigate the goal difference for each country (goals scored minus goals conceded).
 
@@ -782,7 +783,7 @@ ggplot() +
   scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-411-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-411-1.png)
 
 
 
@@ -806,7 +807,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-448-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-448-1.png)
 
 
 Our analysis shows that there is a similar pattern of goal scoring in both halves of a game, with a higher volume of goals scored in the second half. There is also a decrease in goals scored at the end of the game. When we look at extra-time, we see a similar pattern, with goals occurring more frequently in the second half of extra-time. This raises the question of whether the halves of extra-time follow the same pattern as a regular game, considering that players may be physically and mentally tired at this point. To explore this further, we will analyze the data on goals scored during extra-time.
@@ -827,7 +828,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-449-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-449-1.png)
 
 
 Our analysis of goals scored during extra-time has revealed an interesting pattern. Similar to the halves of a regular game, there is a positive slope indicating an increase in goals scored over time. However, the trend appears to be less predictable in extra-time compared to the equivalent periods in a 90-minute game. This suggests that the timing of goals scored during extra-time may be less predictable than in a full game.
@@ -860,7 +861,7 @@ ggplot(data = all_results, aes(x = location)) +
   labs(x = "", y = "")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-450-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-450-1.png)
 
 
 Our analysis shows that more teams win when playing at home compared to when they play away. However, to make a more conclusive assessment of the home advantage, we need to compare a team's performance at home to their performance away. By comparing these two metrics, we can better determine whether the home advantage is a real phenomenon in football.
@@ -927,7 +928,7 @@ ggplot(data = all_results, aes(x = location, y = home_score)) +
   labs(x = "", y = "")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-453-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-453-1.png)
 
 
 The box plot of wins by location provides additional insight into the question of whether home advantage exists in football matches. This plot visualizes the distribution of wins for each location (home, away, and draw). By comparing the median and range of the home and away wins, we can determine whether there are significant differences between the two groups.
@@ -987,7 +988,7 @@ ggplot(data = results_by_year, aes(x = year)) +
 
 
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-454-2.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-454-2.png)
 
 
 Our analysis of the data has provided insight into the home advantage in football. We have observed that home wins have consistently outnumbered losses and home losses, and that the difference between home wins and away wins or draws has been relatively small. However, in recent years, we have seen a reduction in the home advantage. Based on this information, it appears that the home advantage does exist and has potentially become stronger over time.
@@ -1009,7 +1010,7 @@ ggplot(data = countries_per_match, aes(x = date, y = countries)) +
   scale_color_manual(name = "Line Type", values = c("red" = "red", "smooth" = "black"))
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png){: .center}
+![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-455-1.png)
 
 
 
