@@ -1,5 +1,5 @@
 ---
-title: "That's a dive: International Football exploration 2022"
+title: # **"That's a dive: International Football exploration 2022"**
 output: github_document
 knit: true
 ---
@@ -155,6 +155,8 @@ kable(shootouts_by_country)
 |Guinea       |  8|
 |Ivory Coast  |  8|
 |Nigeria      |  8|
+
+
 I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
 ## Which team has won the most penalty shootouts?
@@ -189,15 +191,10 @@ Finally, we can plot the number of penalty goals scored in each year using the f
   ylim(0, NA)
 ```
 
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
 
-```
-## Warning: Removed 20 rows containing missing values (`geom_smooth()`).
-```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
+![plot of chunk unnamed-chunk-6](football_analysisv2_files/figure/unnamed-chunk-6-1.png)
+
 The trend line in the chart shows that the overall number of penalties has been increasing over time. There also appears to be a cyclical pattern of high and low numbers of penalties in recent years. It is worth considering whether football organizations are responding excessively to these fluctuations.
 
 
@@ -226,7 +223,7 @@ ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity")
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
+![plot of chunk unnamed-chunk-7](football_analysisv2_files/figure/unnamed-chunk-7-1.png)
 
 ```r
   goals_2021 <- goalscorers %>%
@@ -341,6 +338,10 @@ kable(head(team_records , 20))
 |Saudi Arabia  |  222|     88|    84|          750|   1.903553|
 |Austria       |  221|    133|    85|          748|   1.703872|
 |Japan         |  213|    101|    95|          734|   1.794621|
+
+
+
+
 In this analysis, we observe that Brazil, Argentina, and Mexico are among the top ranked teams. However, it is worth noting that Mexico has a lower average points total, which could be due to the fact that they have played more games. It appears that South American teams tend to play more frequently than other teams, but further investigation is needed to confirm this. It is important to note that this ranking does not fully reflect the best teams in the world, as it does not take into consideration the quality of opposition and other factors that may affect certain teams more than others. For example, South America has historically been dominated by Brazil and Argentina, while Europe has a larger pool of high-quality teams who play each other less frequently.
 
 ## Is there a correlaton between Own-Goals scored (OGs) and the quality of the team?
@@ -427,11 +428,8 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
   scale_color_gradient(low = "blue", high = "red", guide = FALSE)
 ```
 
-```
-## `geom_smooth()` using formula = 'y ~ x'
-```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png)
+![plot of chunk unnamed-chunk-11](football_analysisv2_files/figure/unnamed-chunk-11-1.png)
 
 ```r
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
@@ -473,13 +471,13 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
  theme(legend.position = "none")
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
+![plot of chunk unnamed-chunk-12](football_analysisv2_files/figure/unnamed-chunk-12-1.png)
 
 The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list.```{r}
 
 ```r
 #Full list here
-kable(print(goals_by_country))
+# kable(head(goals_by_country, n = 40))
 ```
 
 ```
@@ -961,7 +959,7 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   theme(legend.position = "none")
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
+![plot of chunk unnamed-chunk-14](football_analysisv2_files/figure/unnamed-chunk-14-1.png)
 
 Our analysis shows that Northern European countries have high numbers of goals conceded. Argentina and France stand out as notable exceptions, as these countries score and concede a large number of goals. In addition to exploring this trend, we will also investigate the goal difference for each country (goals scored minus goals conceded).
 
@@ -1012,7 +1010,7 @@ ggplot() +
   scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
 ```
 
-![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png)
+![plot of chunk unnamed-chunk-15](football_analysisv2_files/figure/unnamed-chunk-15-1.png)
 Our analysis has revealed interesting patterns in the data. Brazil and Argentina stand out as consistently strong performers. Finland has improved their goal difference, while Luxembourg has taken their place as the most heavily beaten team.
 
 ## When is a goal most likely to occur?
@@ -1033,7 +1031,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-16](football_analysisv2_files/figure/unnamed-chunk-16-1.png)
 
 Our analysis shows that there is a similar pattern of goal scoring in both halves of a game, with a higher volume of goals scored in the second half. There is also a decrease in goals scored at the end of the game. When we look at extra-time, we see a similar pattern, with goals occurring more frequently in the second half of extra-time. This raises the question of whether the halves of extra-time follow the same pattern as a regular game, considering that players may be physically and mentally tired at this point. To explore this further, we will analyze the data on goals scored during extra-time.
 
@@ -1053,7 +1051,7 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17-1.png)
+![plot of chunk unnamed-chunk-17](football_analysisv2_files/figure/unnamed-chunk-17-1.png)
 Our analysis of goals scored during extra-time has revealed an interesting pattern. Similar to the halves of a regular game, there is a positive slope indicating an increase in goals scored over time. However, the trend appears to be less predictable in extra-time compared to the equivalent periods in a 90-minute game. This suggests that the timing of goals scored during extra-time may be less predictable than in a full game.
 
 ## Is there such thing as home-advantage?
@@ -1084,7 +1082,7 @@ ggplot(data = all_results, aes(x = location)) +
   labs(x = "", y = "")
 ```
 
-![plot of chunk unnamed-chunk-18](figure/unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-18](football_analysisv2_files/figure/unnamed-chunk-18-1.png)
 
 Our analysis shows that more teams win when playing at home compared to when they play away. However, to make a more conclusive assessment of the home advantage, we need to compare a team's performance at home to their performance away. By comparing these two metrics, we can better determine whether the home advantage is a real phenomenon in football.
 
@@ -1117,23 +1115,6 @@ results$outcome <- ifelse(results$home_score > results$away_score, 1, 0)
 
 # Create a new variable indicating whether the game was played at home (1) or away (0)
 results$location <- ifelse(results$neutral == TRUE, "neutral", ifelse(results$home_team == results$country, "home", "away"))
-
-
-
-# Perform t-test
-ttest <- t.test(outcome ~ location, data = results, alternative = "two.sided")
-```
-
-```
-## Error in t.test.formula(outcome ~ location, data = results, alternative = "two.sided"): grouping factor must have exactly 2 levels
-```
-
-```r
-ttest
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'ttest' not found
 ```
 
 ```r
@@ -1167,7 +1148,7 @@ ggplot(data = all_results, aes(x = location, y = home_score)) +
   labs(x = "", y = "")
 ```
 
-![plot of chunk unnamed-chunk-21](figure/unnamed-chunk-21-1.png)
+![plot of chunk unnamed-chunk-21](football_analysisv2_files/figure/unnamed-chunk-21-1.png)
 The box plot of wins by location provides additional insight into the question of whether home advantage exists in football matches. This plot visualizes the distribution of wins for each location (home, away, and draw). By comparing the median and range of the home and away wins, we can determine whether there are significant differences between the two groups.
 From the plot, we can see that the medians for both home and away wins are similar, with a slight advantage for home wins. However, the range of wins for both locations is also similar, indicating that the distribution of wins is similar for both home and away matches. This suggests that home advantage may not be a strong factor in determining the outcome of football matches.
 This finding is not supported by the results of the previous statistical tests, including the chi-squared test and the bar chart, which  showed that home advantage may be a significant factor. Overall, these results suggest that while home advantage may exist to some extent, it may not be as strong a factor as previously thought.
@@ -1185,9 +1166,7 @@ results_by_year <- results %>%
 ```
 
 ```
-## Error in `group_by()`:
-## ! Must group by variables found in `.data`.
-## ✖ Column `year` is not found.
+
 ```
 
 ```r
@@ -1217,7 +1196,7 @@ ggplot(data = results_by_year, aes(x = year)) +
   theme(legend.text = element_text(size = 12))
 ```
 
-![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22-1.png)
+![plot of chunk unnamed-chunk-22](football_analysisv2_files/figure/unnamed-chunk-22-1.png)
 
 ```r
 # Add a smoothing line to better visualize trends in the data
@@ -1234,7 +1213,7 @@ ggplot(data = results_by_year, aes(x = year)) +
 ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22-2.png)
+![plot of chunk unnamed-chunk-22](football_analysisv2_files/figure/unnamed-chunk-22-2.png)
 
 Our analysis of the data has provided insight into the home advantage in football. We have observed that home wins have consistently outnumbered losses and home losses, and that the difference between home wins and away wins or draws has been relatively small. However, in recent years, we have seen a reduction in the home advantage. Based on this information, it appears that the home advantage does exist and has potentially become stronger over time.
 ## How has the world's game grown in popularity through time?
@@ -1254,11 +1233,11 @@ ggplot(data = countries_per_match, aes(x = date, y = countries)) +
   scale_color_manual(name = "Line Type", values = c("red" = "red", "smooth" = "black"))
 ```
 
-```
-## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+
 ```
 
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23-1.png)
+![plot of chunk unnamed-chunk-23](football_analysisv2_files/figure/unnamed-chunk-23-1.png)
 Based on the data, it appears that football experienced significant growth in popularity in the late 20th century. This could be seen in the increasing number of countries participating in the sport, the expansion of professional leagues, and the growing number of registered players and fans. It is likely that a combination of factors contributed to the rise of football as the world's most popular game, including its accessibility, global appeal, and cultural significance.
 
 # Conclusion
@@ -1277,177 +1256,3 @@ Based on the analyses conducted, the following are some of the key findings:
 I have greatly enjoyed working with this data on the global popularity and performance of football. As someone who is passionate about both data analytics and sports, it has been a pleasure to delve into the insights and trends that the data has revealed. I am grateful for the opportunity to explore this topic and I hope that my analysis has provided valuable information for others who are interested in the world's favorite game. Thank you for reading.
 
 PAUL CARMODY
-
-```r
-knit("/Users/Paul/Desktop/Football_project/football_analysis1.1.Rmd", output = "/Users/Paul/Desktop/Football_project/football_analysisv2.md")
-```
-
-```
-## 
-## 
-## processing file: /Users/Paul/Desktop/Football_project/football_analysis1.1.Rmd
-```
-
-```
-##   |                                                                              |                                                                      |   0%  |                                                                              |.                                                                     |   2%
-##   ordinary text without R code
-## 
-##   |                                                                              |...                                                                   |   4%
-## label: unnamed-chunk-25
-##   |                                                                              |....                                                                  |   6%
-##   ordinary text without R code
-## 
-##   |                                                                              |......                                                                |   9%
-## label: unnamed-chunk-26
-##   |                                                                              |.......                                                               |  11%
-##   ordinary text without R code
-## 
-##   |                                                                              |.........                                                             |  13%
-## label: unnamed-chunk-27
-##   |                                                                              |..........                                                            |  15%
-##   ordinary text without R code
-## 
-##   |                                                                              |............                                                          |  17%
-## label: unnamed-chunk-28
-##   |                                                                              |.............                                                         |  19%
-##   ordinary text without R code
-## 
-##   |                                                                              |...............                                                       |  21%
-## label: unnamed-chunk-29
-##   |                                                                              |................                                                      |  23%
-##   ordinary text without R code
-## 
-##   |                                                                              |..................                                                    |  26%
-## label: unnamed-chunk-30
-```
-
-```
-##   |                                                                              |...................                                                   |  28%
-##   ordinary text without R code
-## 
-##   |                                                                              |.....................                                                 |  30%
-## label: unnamed-chunk-31
-```
-
-```
-##   |                                                                              |......................                                                |  32%
-##   ordinary text without R code
-## 
-##   |                                                                              |........................                                              |  34%
-## label: unnamed-chunk-32
-##   |                                                                              |.........................                                             |  36%
-##   ordinary text without R code
-## 
-##   |                                                                              |...........................                                           |  38%
-## label: unnamed-chunk-33
-##   |                                                                              |............................                                          |  40%
-##   ordinary text without R code
-## 
-##   |                                                                              |..............................                                        |  43%
-## label: unnamed-chunk-34
-##   |                                                                              |...............................                                       |  45%
-##   ordinary text without R code
-## 
-##   |                                                                              |.................................                                     |  47%
-## label: unnamed-chunk-35
-```
-
-```
-##   |                                                                              |..................................                                    |  49%
-##   ordinary text without R code
-## 
-##   |                                                                              |....................................                                  |  51%
-## label: unnamed-chunk-36
-```
-
-```
-##   |                                                                              |.....................................                                 |  53%
-##   ordinary text without R code
-## 
-##   |                                                                              |.......................................                               |  55%
-## label: unnamed-chunk-37
-##   |                                                                              |........................................                              |  57%
-##   ordinary text without R code
-## 
-##   |                                                                              |..........................................                            |  60%
-## label: unnamed-chunk-38
-```
-
-```
-##   |                                                                              |...........................................                           |  62%
-##   ordinary text without R code
-## 
-##   |                                                                              |.............................................                         |  64%
-## label: unnamed-chunk-39
-```
-
-```
-##   |                                                                              |..............................................                        |  66%
-##   ordinary text without R code
-## 
-##   |                                                                              |................................................                      |  68%
-## label: unnamed-chunk-40
-```
-
-```
-##   |                                                                              |.................................................                     |  70%
-##   ordinary text without R code
-## 
-##   |                                                                              |...................................................                   |  72%
-## label: unnamed-chunk-41
-```
-
-```
-##   |                                                                              |....................................................                  |  74%
-##   ordinary text without R code
-## 
-##   |                                                                              |......................................................                |  77%
-## label: unnamed-chunk-42
-```
-
-```
-##   |                                                                              |.......................................................               |  79%
-##   ordinary text without R code
-## 
-##   |                                                                              |.........................................................             |  81%
-## label: unnamed-chunk-43
-##   |                                                                              |..........................................................            |  83%
-## label: unnamed-chunk-44
-##   |                                                                              |............................................................          |  85%
-##   ordinary text without R code
-## 
-##   |                                                                              |.............................................................         |  87%
-## label: unnamed-chunk-45
-```
-
-```
-##   |                                                                              |...............................................................       |  89%
-##   ordinary text without R code
-## 
-##   |                                                                              |................................................................      |  91%
-## label: unnamed-chunk-46
-```
-
-```
-##   |                                                                              |..................................................................    |  94%
-##   ordinary text without R code
-## 
-##   |                                                                              |...................................................................   |  96%
-## label: unnamed-chunk-47
-```
-
-```
-##   |                                                                              |..................................................................... |  98%
-##   ordinary text without R code
-## 
-##   |                                                                              |......................................................................| 100%
-## label: unnamed-chunk-48
-```
-
-```
-## output file: /Users/Paul/Desktop/Football_project/football_analysisv2.md
-```
-
-```
-## [1] "/Users/Paul/Desktop/Football_project/football_analysisv2.md"
-```
