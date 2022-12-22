@@ -224,7 +224,7 @@ ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity")
 ```
 
-![plot of chunk unnamed-chunk-7](football_analysisv2_files/figure/unnamed-chunk-7-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-7-1.png)
 
 ```r
   goals_2021 <- goalscorers %>%
@@ -430,8 +430,8 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
 ```
 
 
-![plot of chunk unnamed-chunk-11](football_analysisv2_files/figure/unnamed-chunk-11-1.png)
 
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-11-1.png)
 ```r
 # Calculate the Pearson correlation coefficient between the number of own goals scored and the total points 
 correlation <- cor(team_records_with_ogs$count, team_records_with_ogs$total_points)
@@ -472,7 +472,7 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
  theme(legend.position = "none")
 ```
 
-![plot of chunk unnamed-chunk-12](football_analysisv2_files/figure/unnamed-chunk-12-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-12-1.png)
 
 The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list.```{r}
 
@@ -960,7 +960,7 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   theme(legend.position = "none")
 ```
 
-![plot of chunk unnamed-chunk-14](football_analysisv2_files/figure/unnamed-chunk-14-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png)
 
 Our analysis shows that Northern European countries have high numbers of goals conceded. Argentina and France stand out as notable exceptions, as these countries score and concede a large number of goals. In addition to exploring this trend, we will also investigate the goal difference for each country (goals scored minus goals conceded).
 
@@ -1011,7 +1011,9 @@ ggplot() +
   scale_fill_manual(name = "Goal Difference", values = c("red" = "red", "blue" = "blue"))
 ```
 
-![plot of chunk unnamed-chunk-15](football_analysisv2_files/figure/unnamed-chunk-15-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-15-1.png)
+
+
 Our analysis has revealed interesting patterns in the data. Brazil and Argentina stand out as consistently strong performers. Finland has improved their goal difference, while Luxembourg has taken their place as the most heavily beaten team.
 
 ## When is a goal most likely to occur?
@@ -1032,7 +1034,8 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![plot of chunk unnamed-chunk-16](football_analysisv2_files/figure/unnamed-chunk-16-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-16-1.png)
+
 
 Our analysis shows that there is a similar pattern of goal scoring in both halves of a game, with a higher volume of goals scored in the second half. There is also a decrease in goals scored at the end of the game. When we look at extra-time, we see a similar pattern, with goals occurring more frequently in the second half of extra-time. This raises the question of whether the halves of extra-time follow the same pattern as a regular game, considering that players may be physically and mentally tired at this point. To explore this further, we will analyze the data on goals scored during extra-time.
 
@@ -1052,7 +1055,9 @@ ggplot(data = goalscorers, aes(x = minute)) +
 ## Warning: Removed 258 rows containing non-finite values (`stat_bin()`).
 ```
 
-![plot of chunk unnamed-chunk-17](football_analysisv2_files/figure/unnamed-chunk-17-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-17-1.png)
+
+
 Our analysis of goals scored during extra-time has revealed an interesting pattern. Similar to the halves of a regular game, there is a positive slope indicating an increase in goals scored over time. However, the trend appears to be less predictable in extra-time compared to the equivalent periods in a 90-minute game. This suggests that the timing of goals scored during extra-time may be less predictable than in a full game.
 
 ## Is there such thing as home-advantage?
@@ -1083,7 +1088,8 @@ ggplot(data = all_results, aes(x = location)) +
   labs(x = "", y = "")
 ```
 
-![plot of chunk unnamed-chunk-18](football_analysisv2_files/figure/unnamed-chunk-18-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-18-1.png)
+
 
 Our analysis shows that more teams win when playing at home compared to when they play away. However, to make a more conclusive assessment of the home advantage, we need to compare a team's performance at home to their performance away. By comparing these two metrics, we can better determine whether the home advantage is a real phenomenon in football.
 
@@ -1149,7 +1155,9 @@ ggplot(data = all_results, aes(x = location, y = home_score)) +
   labs(x = "", y = "")
 ```
 
-![plot of chunk unnamed-chunk-21](football_analysisv2_files/figure/unnamed-chunk-21-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-21-1.png)
+
+
 The box plot of wins by location provides additional insight into the question of whether home advantage exists in football matches. This plot visualizes the distribution of wins for each location (home, away, and draw). By comparing the median and range of the home and away wins, we can determine whether there are significant differences between the two groups.
 From the plot, we can see that the medians for both home and away wins are similar, with a slight advantage for home wins. However, the range of wins for both locations is also similar, indicating that the distribution of wins is similar for both home and away matches. This suggests that home advantage may not be a strong factor in determining the outcome of football matches.
 This finding is not supported by the results of the previous statistical tests, including the chi-squared test and the bar chart, which  showed that home advantage may be a significant factor. Overall, these results suggest that while home advantage may exist to some extent, it may not be as strong a factor as previously thought.
@@ -1197,8 +1205,8 @@ ggplot(data = results_by_year, aes(x = year)) +
   theme(legend.text = element_text(size = 12))
 ```
 
-![plot of chunk unnamed-chunk-22](football_analysisv2_files/figure/unnamed-chunk-22-1.png)
 
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-22-1.png)
 ```r
 # Add a smoothing line to better visualize trends in the data
 ggplot(data = results_by_year, aes(x = year)) +
@@ -1214,7 +1222,9 @@ ggplot(data = results_by_year, aes(x = year)) +
 ## `geom_smooth()` using method = 'loess' and formula = 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-22](football_analysisv2_files/figure/unnamed-chunk-22-2.png)
+
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-22-2.png)
+
 
 Our analysis of the data has provided insight into the home advantage in football. We have observed that home wins have consistently outnumbered losses and home losses, and that the difference between home wins and away wins or draws has been relatively small. However, in recent years, we have seen a reduction in the home advantage. Based on this information, it appears that the home advantage does exist and has potentially become stronger over time.
 ## How has the world's game grown in popularity through time?
@@ -1237,8 +1247,9 @@ ggplot(data = countries_per_match, aes(x = date, y = countries)) +
 
 
 ```
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-23-1.png)
 
-![plot of chunk unnamed-chunk-23](football_analysisv2_files/figure/unnamed-chunk-23-1.png)
+
 Based on the data, it appears that football experienced significant growth in popularity in the late 20th century. This could be seen in the increasing number of countries participating in the sport, the expansion of professional leagues, and the growing number of registered players and fans. It is likely that a combination of factors contributed to the rise of football as the world's most popular game, including its accessibility, global appeal, and cultural significance.
 
 # Conclusion
