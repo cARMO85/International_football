@@ -160,7 +160,7 @@ kable(shootouts_by_country)
 
 I am writing this just 3 days after Messi's Argentina beat France to lift the trophy and now I find out that that shootout makes them the most successful teram in international football history.
 
-## Which team has won the most penalty shootouts?
+## Has the volume of penalties changed over time??
 First, we will filter the data to include only penalty goals:
 
 ```r
@@ -189,7 +189,8 @@ Finally, we can plot the number of penalty goals scored in each year using the f
   ggplot(penalty_goals_by_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity") +
   geom_smooth(method = "lm", se = FALSE) +
-  ylim(0, NA)
+  ylim(0, NA) +
+  ylab ("Count of penalties")
 
   
 ```
@@ -222,7 +223,8 @@ penalty_goals_by_year <- penalty_goals_32 %>%
 
 # Create a bar chart of penalty goals scored by year
 ggplot(data = penalty_goals_by_year, aes(x = year, y = count)) +
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity")+
+  ylab ("Count of penalties")
 ```
 ```r
   goals_2021 <- goalscorers %>%
@@ -425,7 +427,10 @@ ggplot(data = team_records_with_ogs, aes(x = count, y = total_points)) +
   geom_point(aes(color = count)) +
   geom_smooth(method = "lm", se = FALSE) +
   xlim(0, NA) + ylim(0, NA) +
-  scale_color_gradient(low = "blue", high = "red", guide = FALSE)
+  scale_color_gradient(low = "blue", high = "red", guide = FALSE) +
+  ggtitle("My Chart Title") +
+  theme(plot.title = element_text(size = 20)) +
+  xlab("Count of own goals scored") 
 ```
 
 
@@ -475,7 +480,7 @@ ggplot(data = goals_by_country_top10, aes(x = goals_scored, y = team, fill = ran
   theme(legend.position = "none")
 ```
 
-![image description](https://github.com/cARMO85/International_football/blob/master/figure-html/unnamed-chunk-441-1.png)
+![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-12-1.png)
 
 The top 10 countries with the highest number of goals scored are primarily from South America and Europe. While there were no major surprises in this list, we will create a longer table to see how other countries rank further down the list. Also please see table below for more details.
 
@@ -731,10 +736,11 @@ ggplot(data = goals_conceded_by_team, aes(x = goals_conceded, y = home_team, fil
   geom_bar(stat = "identity") +
   xlab("Goals Conceded") + ylab("Team") +
   ggtitle("Goals Conceded by Team (Top 20)") +
-  theme(axis.text.y = element_text(size = 18, face = "bold")) +
+  theme(axis.text.y = element_text(size = 12, face = "bold")) +
   labs(y = "", x = "") +
   geom_text(aes(label = goals_conceded), hjust = 0, vjust = 0, size = 5) +
   theme(legend.position = "none")
+
 ```
 
 ![image description](https://github.com/cARMO85/International_football/blob/master/football_analysisv2_files/figure-html/unnamed-chunk-14-1.png)
@@ -748,23 +754,14 @@ top_10_high <- goals_by_team %>%
   arrange(desc(goal_difference))
 ```
 
-```
-#
-
 ```r
 # Select the top 10 countries with the lowest goal difference
 top_10_low <- goals_by_team %>%
   top_n(-10, goal_difference) %>%
   arrange(goal_difference)
+ 
 ```
 
-```
-## Error in `filter()`:
-## ! Problem while computing `..1 = top_n_rank(-10, goal_difference)`.
-## ℹ The error occurred in group 1: home_team = "Abkhazia".
-## Caused by error:
-## ! object 'goal_difference' not found
-```
 
 ```r
 # Reorder the levels of the home_team variable based on the goal_difference column
@@ -798,9 +795,11 @@ ggplot(data = goalscorers, aes(x = minute)) +
   geom_histogram(breaks = seq(0, 120, by = 3), fill = "steelblue") +
   xlab("Minute") + ylab("Number of Goals") +
   ggtitle("Goals Scored by Minute") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 18, vjust = 0.5, face = "bold")) +
-  labs(x = "", y = "") +
-  geom_vline(xintercept = 45, color = "red", size = 2)
+  theme(axis.text = element_text(size = 16)) +
+  labs(x = "Minute in game", y = "Total no. of goals scored") +
+  geom_vline(xintercept = 45, color = "red", size = 2) +
+  scale_x_continuous(breaks = seq(0, 120, by = 5))
+
 ```
 
 ```
@@ -819,9 +818,10 @@ ggplot(data = goalscorers, aes(x = minute)) +
   geom_histogram(breaks = seq(94, 130, by = 1), fill = "pink") +
   xlab("Minute") + ylab("Number of Goals") +
   ggtitle("Goals Scored by Minute") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 14, vjust = 0.5, face = "bold")) +
-  labs(x = "", y = "") +
-  geom_vline(xintercept = 105, color = "blue", size = 1.5)
+  theme(axis.text = element_text(size = 16)) +
+  labs(x = "Minute in game", y = "Total no. og goals scored") +
+  geom_vline(xintercept = 105, color = "blue", size = 1.5) +
+  scale_x_continuous(breaks = seq(94, 130, by = 5))
 ```
 
 ```
@@ -858,7 +858,7 @@ ggplot(data = all_results, aes(x = location)) +
   ggtitle("Number of Results by Location") +
   theme(axis.text.x = element_text(size = 12, face = "bold"),
         axis.text.y = element_text(size = 12, face = "bold")) +
-  labs(x = "", y = "")
+  labs(x = "Location of game played", y = "Total number of results")
 ```
 
 ![image description](https://github.com/cARMO85/International_football/blob/master/figure/unnamed-chunk-450-1.png)
