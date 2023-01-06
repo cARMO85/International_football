@@ -86,7 +86,6 @@ kable(head(shootouts, n = 3))
 ```
 
 
-
 |date       |home_team   |away_team        |winner      |
 |:----------|:-----------|:----------------|:-----------|
 |1967-08-22 |India       |Taiwan           |Taiwan      |
